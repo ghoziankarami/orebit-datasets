@@ -1,0 +1,73 @@
+CARA MENERBITKAN REPO INI KE GITHUB
+==========================================================
+
+Folder ini SUDAH jadi repo git yang siap kirim. Dua commit sudah
+dibuat, working tree bersih. Yang kurang cuma satu: alamat remote,
+karena itu butuh kredensial GitHub kamu.
+
+
+LANGKAH
+----------------------------------------------------------
+1. Buat repo kosong di GitHub
+   Buka https://github.com/new
+   - Repository name : orebit-datasets
+   - Description     : Three fully synthetic drillhole datasets
+                       (epithermal gold, nickel laterite, alluvial
+                       tin) for teaching, testing and benchmarking.
+                       CC BY 4.0.
+   - Public
+   - JANGAN centang "Add a README", "Add .gitignore", atau
+     "Choose a license". Semuanya sudah ada di sini, dan kalau
+     dicentang akan bentrok waktu push.
+
+2. Buka terminal / Git Bash di folder ini, jalankan:
+
+   git remote add origin https://github.com/USERNAME/orebit-datasets.git
+   git push -u origin main
+
+   Ganti USERNAME dengan username GitHub kamu.
+   Kalau diminta password, isi Personal Access Token, bukan
+   password akun (GitHub sudah tidak menerima password sejak 2021).
+   Buat token di: Settings > Developer settings > Personal access
+   tokens > Tokens (classic), centang scope "repo".
+
+   Kalau kamu pakai GitHub Desktop: File > Add local repository,
+   arahkan ke folder ini, lalu Publish repository.
+
+
+SETELAH PUSH — 4 hal kecil
+----------------------------------------------------------
+1. Edit CITATION.cff, ganti GANTI-USERNAME dengan username asli.
+   Lalu commit + push lagi.
+
+2. Isi "About" repo di GitHub (ikon gerigi kanan atas halaman repo):
+   - Description: sama seperti di atas
+   - Website: https://geosuite.orebit.id
+   - Topics: drillhole-data, geostatistics, resource-estimation,
+             synthetic-data, mining, geology, open-data, indonesia
+
+3. Ambil link repo, lalu isi placeholder [ISI LINK DI SINI] di
+   ..\02-LINKEDIN-DATASET-RILIS\POST-COMPANY.txt dan
+   ..\02-LINKEDIN-DATASET-RILIS\POST-PERSONAL.txt
+
+4. Opsional tapi berguna kalau target kamu dosen dan peneliti:
+   hubungkan repo ke Zenodo (https://zenodo.org/account/settings/github/)
+   lalu buat Release v1.0.0 di GitHub. Zenodo akan menerbitkan DOI
+   otomatis, dan dataset jadi bisa disitasi di paper.
+
+
+PERINGATAN — folder ini di dalam Nextcloud
+----------------------------------------------------------
+Repo git di dalam folder yang disinkronkan Nextcloud kadang rusak,
+karena Nextcloud bisa menyalin isi .git di tengah operasi git.
+Sudah terjadi sekali waktu commit pertama dibuat (file lock
+tertinggal dan harus dibersihkan manual).
+
+Kalau nanti muncul error semacam:
+   "Unable to create '.git/index.lock': File exists"
+matikan sinkronisasi Nextcloud sebentar, hapus semua file .lock di
+dalam .git, lalu ulangi perintahnya.
+
+Cara paling aman untuk jangka panjang: pindahkan folder repo ini ke
+luar Nextcloud (misal D:\dev\orebit-datasets), dan biarkan Nextcloud
+hanya menyimpan salinan datanya saja tanpa .git.
