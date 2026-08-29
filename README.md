@@ -62,7 +62,7 @@ orebit-datasets/
 ├── 01-emas-epitermal/     collar · survey · assay · litho · README
 ├── 02-nikel-laterit/      collar · survey · assay · litho · README
 ├── 03-timah-placer/       collar · survey · assay · litho · README
-├── figures/               plots generated from the released CSVs
+├── figures/               deposit-styles.png · grade-distributions.png
 ├── _generator/            the models that produced everything
 │   ├── common.py            noise fields + minimum-curvature desurvey
 │   ├── gen_emas.py          gold

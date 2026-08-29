@@ -178,7 +178,7 @@ ax.grid(alpha=0.11, color=PAPER)
 
 fig.text(0.085, 0.018, "orebit.id  ·  geosuite.orebit.id", fontsize=11,
          color=MUTED)
-fig.savefig(os.path.join(OUT, "GAMBAR-1-tiga-gaya-endapan.png"))
+fig.savefig(os.path.join(OUT, "deposit-styles.png"))
 plt.close(fig)
 print("GAMBAR-1 selesai")
 
@@ -237,6 +237,6 @@ for i, (d, gc, xlab, name, dom, codes, logx, colr) in enumerate(SETS):
 fig.text(0.10, 0.016,
          "One erratic, one smooth, one thin and skewed  -  "
          "orebit.id  -  CC BY 4.0", fontsize=11, color=MUTED)
-fig.savefig(os.path.join(OUT, "GAMBAR-2-sebaran-kadar.png"))
+fig.savefig(os.path.join(OUT, "grade-distributions.png"))
 plt.close(fig)
 print("GAMBAR-2 selesai")
