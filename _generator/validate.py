@@ -100,3 +100,6 @@ for folder, gcol, unit in SETS:
 print("\n" + "=" * 68)
 print("PEMERIKSAAN GAGAL:", fail)
 print("=" * 68)
+
+# A failed validation must also fail the shell/CI job.
+raise SystemExit(1 if fail else 0)
