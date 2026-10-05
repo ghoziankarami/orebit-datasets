@@ -112,3 +112,6 @@ ck("sebaran Y", c.YCOLLAR.max()-c.YCOLLAR.min(), 1906, 0.01)
 print("=" * 74)
 print("KLAIM README YANG TIDAK COCOK:", bad)
 print("=" * 74)
+
+# A failed validation must also fail the shell/CI job.
+raise SystemExit(1 if bad else 0)

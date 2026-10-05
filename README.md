@@ -84,7 +84,7 @@ git clone https://github.com/ghoziankarami/orebit-datasets.git
 cd orebit-datasets
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install numpy pandas
+python -m pip install -r _generator/requirements.txt
 ```
 
 ```python
@@ -216,3 +216,15 @@ on these, a link back is welcome but not required beyond the licence.
 
 Dapat dipakai dengan [GeoSuite](https://geosuite.orebit.id) atau perangkat
 analisis lain. Panduan kontribusi: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Validation in CI
+
+`Dataset validation` checks the committed CSVs, reference statistics and negative regression fixtures. Run the same checks locally:
+
+```bash
+python _generator/validate.py
+python _generator/check_readme.py
+python -m unittest discover -s tests -v
+```
+
+Both checker commands return a nonzero exit status when their checks fail. The statistics checker compares CSV values to explicit reference numbers in its script; it does not parse every number in arbitrary README prose. These checks cover data integrity and documented model statistics, not independent geological validation.
