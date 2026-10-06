@@ -26,3 +26,11 @@ jobs:
         run: python _generator/check_readme.py
       - name: Prove invalid datasets fail the CLI
         run: python -m unittest discover -s tests -v
+      - name: Package validated CSVs with provenance and checksums
+        run: python _generator/package_snapshot.py --source-ref "$GITHUB_SHA"
+      - name: Keep complete teaching-data snapshot
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: orebit-datasets-${{ github.sha }}
+          path: artifacts/*
+          if-no-files-found: error

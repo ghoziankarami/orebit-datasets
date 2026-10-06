@@ -11,6 +11,12 @@ and commercial software. Just credit Orebit.id.
 
 ---
 
+[Download all CSVs (source ZIP)](https://github.com/ghoziankarami/orebit-datasets/archive/refs/heads/main.zip) ·
+[Use with GeoSuite](docs/USE_WITH_GEOSUITE.md) · [Orebit guides](https://orebit.id/docs.html)
+
+Reading or importing the CSVs needs no Python installation. Python and the
+pinned dependencies are only needed for generators and validation.
+
 ## The three datasets
 
 | | `01-emas-epitermal` | `02-nikel-laterit` | `03-timah-placer` |
@@ -65,7 +71,7 @@ orebit-datasets/
 │   ├── gen_nikel.py         nickel
 │   ├── gen_timah.py         tin
 │   ├── validate.py          integrity + plausibility checks
-│   ├── check_readme.py      verifies every number quoted in the READMEs
+│   ├── check_readme.py      checks reference counts and selected statistics
 │   └── make_figures.py      the figures above
 ├── CITATION.cff
 ├── LICENSE.txt            CC BY 4.0
