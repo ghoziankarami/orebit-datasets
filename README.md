@@ -233,4 +233,13 @@ python _generator/check_readme.py
 python -m unittest discover -s tests -v
 ```
 
+The validator checks required column names against the snapshot's grade-unit
+schema, unique collar IDs and survey stations, orphan references, finite
+geometry, assay/lithology interval overlap and collar-depth bounds, and
+nonnegative finite populated grade/density cells. Blank grades remain missing
+values. Negative fixtures exercise these boundaries on copied CSVs, without
+editing the committed training data. A correctly named column alone cannot
+prove that measurements actually use the declared unit.
+
+
 Both checker commands return a nonzero exit status when their checks fail. The statistics checker compares CSV values to explicit reference numbers in its script; it does not parse every number in arbitrary README prose. These checks cover data integrity and documented model statistics, not independent geological validation.
