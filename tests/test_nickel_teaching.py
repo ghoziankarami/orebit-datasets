@@ -19,6 +19,18 @@ def rows(path):
 
 
 class NickelTeaching(unittest.TestCase):
+    def test_field_collars_are_visibly_displaced_from_planned_grid(self):
+        c = pd.read_csv(ROOT / "02-nikel-laterit/collar.csv")
+        planned = np.asarray(layout.drill_nodes())
+        actual = c[["XCOLLAR", "YCOLLAR"]].to_numpy() - [392000.0, 9558000.0]
+        displacement = np.linalg.norm(actual - planned, axis=1)
+        self.assertGreater(np.median(displacement), 10.0)
+        self.assertLess(displacement.max(), 45.0)
+        self.assertTrue(all(layout.inside_prospect(*p) for p in actual))
+        distances = np.linalg.norm(actual[:, None] - actual[None, :], axis=2)
+        np.fill_diagonal(distances, np.inf)
+        self.assertGreater(distances.min(), 18.0)
+
     def test_irregular_strike_footprint_and_infill(self):
         nodes = layout.drill_nodes()
         self.assertEqual(len(nodes), 350)
@@ -70,6 +82,16 @@ class NickelTeaching(unittest.TestCase):
                     (main / f"{table}.csv").read_bytes(),
                     (ROOT / f"exercises/{exercise}/{table}.csv").read_bytes(),
                 )
+
+    def test_linkage_exercise_exposes_orphans_and_missing_geology(self):
+        p = ROOT / "exercises/missing-collar-and-geology"
+        c, s, a, g = (rows(p / (name + ".csv")) for name in ("collar", "survey", "assay", "litho"))
+        holes = {r["BHID"] for r in c}
+        self.assertEqual(len({r["BHID"] for r in a} - holes), 1)
+        self.assertEqual(len({r["BHID"] for r in s} - holes), 1)
+        self.assertEqual(len(holes - {r["BHID"] for r in g}), 1)
+        self.assertEqual(len({r["BHID"] for r in g} - holes), 2)
+        self.assertEqual(len(c), 349)
 
     def test_regeneration_reproduces_committed_csvs(self):
         with tempfile.TemporaryDirectory() as temp:

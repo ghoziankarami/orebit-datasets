@@ -8,27 +8,27 @@ Ferricrete/overburden → limonite → saprolite → fresh peridotite. Laterite 
 
 | Horizon | Meaning | Mean logged thickness (m) | Valid Ni samples | Mean Ni (%) | Mean measured SG (t/m³) |
 | --- | --- | ---: | ---: | ---: | ---: |
-| OVB | Ferricrete / overburden | 1.28 | 423 | 0.707 | 1.532 |
-| LIM | Limonite | 7.27 | 2,524 | 1.170 | 1.461 |
-| SAP | Saprolite | 12.07 | 4,206 | 1.693 | 1.642 |
-| BRK | Fresh bedrock penetrated by drilling | 2.78 | 1,022 | 0.287 | 2.606 |
+| OVB | Ferricrete / overburden | 1.29 | 424 | 0.707 | 1.531 |
+| LIM | Limonite | 8.01 | 2,788 | 1.168 | 1.462 |
+| SAP | Saprolite | 13.26 | 4,631 | 1.691 | 1.641 |
+| BRK | Fresh bedrock penetrated by drilling | 2.77 | 1,019 | 0.289 | 2.620 |
 
 ## Drilling and files
 
-**350 vertical holes, 8,131.7 m drilled.** Regional spacing is 100 m with selective 50 m infill following the prospect centre. Collars have small field-position scatter. This keeps a useful clustering exercise without a rectangular prospect outline.
+**350 vertical holes, 8,811.5 m drilled.** Regional spacing is 100 m with selective 50 m infill following the prospect centre. Field collars depart from planned nodes by up to 44 m, preferring gentler local slopes with at least 20 m separation. This keeps a useful clustering exercise without a rectangular prospect outline.
 
 - collar.csv: 350 rows; BHID, XCOLLAR, YCOLLAR, ZCOLLAR, TD. Fictional WGS84 / UTM 51S coordinates, metres.
 - survey.csv: 700 rows; BHID, AT, AZ, DIP. Positive-down dip: 90° is vertical.
-- assay.csv: 8,211 intervals, nominally 1 m; Ni, Co, Fe, MgO, SiO₂, Al₂O₃, Cr₂O₃ in percent and SG in t/m³.
-- litho.csv: 1,371 intervals; BHID, FROM, TO, LITH.
+- assay.csv: 8,896 intervals, nominally 1 m; Ni, Co, Fe, MgO, SiO₂, Al₂O₃, Cr₂O₃ in percent and SG in t/m³.
+- litho.csv: 1,372 intervals; BHID, FROM, TO, LITH.
 
-10 holes stop in the weathered profile before fresh bedrock. 36 intervals have missing assays; measured SG is retained. Missing grades are blanks, not zeros.
+10 holes stop in the weathered profile before fresh bedrock. 34 intervals have missing assays; measured SG is retained. Missing grades are blanks, not zeros.
 
 ## Sample statistics
 
 These are unweighted sample statistics; they are not resource grades or contained metal. The active domain, composite support, density, search and geometry must be recorded separately when estimating.
 
-Valid Ni n=8,175; mean **1.305%**, median 1.269%, maximum 3.892%, sample CV **0.467**. Fe–MgO correlation **-0.881**.
+Valid Ni n=8,862; mean **1.318%**, median 1.279%, maximum 3.657%, sample CV **0.456**. Fe–MgO correlation **-0.878**.
 
 The full-precision sampled populations and counts are in STATISTICS.json. Opening all domains together mixes different weathering horizons; compare limonite and saprolite separately.
 
@@ -42,7 +42,7 @@ Carry measured SG through Core → Assay → Resource. A single assumed density 
 
 ## Core validation exercises
 
-See ../exercises/README.md for a missing-survey case and an overlapping-assay case. They are deliberately incomplete/invalid copies for teaching validation. Use the four tables in this directory for the main workflow.
+See ../exercises/README.md for missing-survey, overlapping-assay and missing-collar/geology cases. They are deliberately incomplete/invalid copies for teaching validation. Use the four tables in this directory for the main workflow.
 
 ## Reproduce
 

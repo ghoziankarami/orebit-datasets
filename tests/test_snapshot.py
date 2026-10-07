@@ -24,7 +24,7 @@ class Snapshot(unittest.TestCase):
             self.assertEqual(manifest["source_ref"], "tested-revision")
             for folder, count in zip(module.DATASETS, (103, 350, 500)):
                 self.assertEqual(manifest["files"][folder + "/collar.csv"]["rows"], count)
-            self.assertEqual(len([name for name in manifest["files"] if name.endswith(".csv")]), 20)
+            self.assertEqual(len([name for name in manifest["files"] if name.endswith(".csv")]), 24)
 
     def test_modified_data_and_missing_table_are_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

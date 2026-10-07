@@ -23,7 +23,7 @@ def payload(root):
     paths += ["README.md", "LICENSE.txt", "CITATION.cff", "docs/USE_WITH_GEOSUITE.md"]
     paths += [p.relative_to(root).as_posix() for p in sorted((root / "_generator").glob("*.py"))]
     paths += ["_generator/requirements.txt", "02-nikel-laterit/STATISTICS.json", "exercises/README.md"]
-    paths += [f"exercises/{exercise}/{table}.csv" for exercise in ("missing-survey", "overlapping-assay") for table in TABLES]
+    paths += [f"exercises/{exercise}/{table}.csv" for exercise in ("missing-survey", "overlapping-assay", "missing-collar-and-geology") for table in TABLES]
     return {name: (root / name).read_bytes() for name in sorted(paths)}
 
 
@@ -48,9 +48,9 @@ def verify(root):
     if manifest.get("schema_version") != 1 or manifest.get("synthetic") is not True:
         raise ValueError("Unsupported snapshot manifest")
     expected_csv = {f"{folder}/{table}.csv" for folder in DATASETS for table in TABLES}
-    expected_csv |= {f"exercises/{exercise}/{table}.csv" for exercise in ("missing-survey", "overlapping-assay") for table in TABLES}
+    expected_csv |= {f"exercises/{exercise}/{table}.csv" for exercise in ("missing-survey", "overlapping-assay", "missing-collar-and-geology") for table in TABLES}
     if {name for name in manifest["files"] if name.endswith(".csv")} != expected_csv:
-        raise ValueError("Snapshot must contain the twelve training CSVs and eight exercise CSVs")
+        raise ValueError("Snapshot must contain the twelve training CSVs and twelve exercise CSVs")
     for name, record in manifest["files"].items():
         path = Path(name)
         if path.is_absolute() or ".." in path.parts:

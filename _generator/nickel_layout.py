@@ -20,6 +20,30 @@ def inside_prospect(x, y):
     return (u / 1030) ** 2 + ((v - centre) / flank) ** 2 <= 1
 
 
+def place_collar(planned, rng, slope, placed):
+    """Synthetic field siting near a planned pad, preferring gentler terrain.
+
+    Retain regional/infill intent without implying that a real field crew can
+    drill a perfect lattice. Position errors are not geological uncertainty.
+    """
+    candidates = []
+    x, y = planned
+    for _ in range(24):
+        dx, dy = rng.normal(0, 18, 2)
+        point = (float(x + dx), float(y + dy))
+        distance = math.hypot(dx, dy)
+        if distance > 44 or not inside_prospect(*point):
+            continue
+        if any(math.dist(point, previous) < 20 for previous in placed):
+            continue
+        # Field access and departure from the planned target both matter.
+        score = float(slope(*point)) + 0.04 * distance
+        candidates.append((score, point))
+    if not candidates:
+        raise ValueError("No safe synthetic collar position near planned pad")
+    return min(candidates, key=lambda value: value[0])[1]
+
+
 def drill_nodes(count=350):
     regional = {
         (float(x), float(y))

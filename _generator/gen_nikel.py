@@ -20,7 +20,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import SmoothNoise
-from nickel_layout import drill_nodes
+from nickel_layout import drill_nodes, place_collar
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                    "..", "02-nikel-laterit")
@@ -86,12 +86,15 @@ rows_col, rows_sur, rows_asy, rows_lit = [], [], [], []
 
 # Sampling footprint is a conceptual ultramafic ridge programme; it is not an ore shell.
 nodes = drill_nodes()
+site_rng = np.random.default_rng(SEED + 17)
+placed = []
 
 for i, (gx, gy) in enumerate(nodes, start=1):
     bhid = "LMT-%04d" % i
-    # posisi lapangan meleset sedikit dari titik grid rencana
-    x = gx + rng.normal(0, 1.6)
-    y = gy + rng.normal(0, 1.6)
+    # Pad placement follows synthetic terrain/access near the planned target.
+    x, y = place_collar((gx, gy), site_rng,
+        lambda sx, sy: slope_pct(np.array([sx]), np.array([sy]))[0], placed)
+    placed.append((x, y))
     xa, ya = np.array([x]), np.array([y])
     z = float(topo(xa, ya)[0])
     t_ovb, t_lim, t_sap, dev = [float(v[0]) for v in profile(xa, ya)]
