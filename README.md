@@ -25,10 +25,10 @@ pinned dependencies are only needed for generators and validation.
 | Style | Low-sulphidation epithermal vein | Ni laterite over ultramafic | Alluvial placer (cassiterite) |
 | Indonesian analogue | Pongkor / Cikotok, West Java | Sorowako / Halmahera | Bangka–Belitung |
 | Geometry | Steep tabular vein, dip 75° | Sub-horizontal layered profile | Buried palaeochannel |
-| Drilling | 103 angled holes, 20,187 m | 350 vertical holes, 8,195 m | 500 vertical holes, 5,867 m |
-| Pattern | 30 m sections, 4 holes deep | 100 m grid + 50 m infill | 100 m lines × 25 m holes |
+| Drilling | 103 angled holes, 20,187 m | 350 vertical holes, 8,131.7 m | 500 vertical holes, 5,867 m |
+| Pattern | 30 m sections, 4 holes deep | Curved prospect, 100 m regional + selective 50 m infill | 100 m lines × 25 m holes |
 | Sample | 1 m in vein / 2 m waste | 1 m | 1 m |
-| Assay rows | 11,526 | 8,278 | 5,990 |
+| Assay rows | 11,526 | 8,211 | 5,990 |
 | Grade CV | **1.66** (in vein) | **0.28** (in saprolite) | **1.42** (in kaksa) |
 | Grade unit | g/t | % | kg/m³ |
 
@@ -243,3 +243,7 @@ prove that measurements actually use the declared unit.
 
 
 Both checker commands return a nonzero exit status when their checks fail. The statistics checker compares CSV values to explicit reference numbers in its script; it does not parse every number in arbitrary README prose. These checks cover data integrity and documented model statistics, not independent geological validation.
+
+## Core validation exercises
+
+[Two deliberate failure cases](exercises/README.md) teach missing-survey and overlapping-assay validation. The main nickel files and default app sample retain the valid workflow.

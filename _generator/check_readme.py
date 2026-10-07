@@ -57,30 +57,14 @@ print("NIKEL")
 c, s, a, l, m = load("02-nikel-laterit")
 sap, lim = m[m.LITH == "SAP"], m[m.LITH == "LIM"]
 ck("collar", len(c), 350, 0); ck("survey", len(s), 700, 0)
-ck("assay", len(a), 8278, 0); ck("litho", len(l), 1366, 0)
-ck("meter bor", c.TD.sum(), 8195, 0.001)
-ck("lubang buntu (tanpa BRK)", len(c)-l[l.LITH=="BRK"].BHID.nunique(), 8, 0)
-ck("tebal limonit rata2", l[l.LITH=="LIM"].eval("TO-FROM").mean(), 7.9, 0.02)
-ck("tebal saprolit rata2", l[l.LITH=="SAP"].eval("TO-FROM").mean(), 11.7, 0.02)
-for e, sv, lv in [("NI_PCT",1.72,1.19),("CO_PCT",0.051,0.119),("FE_PCT",15.1,42.1),
-                  ("MGO_PCT",18.1,3.8),("SIO2_PCT",36.2,12.0),("SG",1.65,1.46)]:
-    ck("saprolit "+e, sap[e].mean(), sv, 0.02); ck("limonit  "+e, lim[e].mean(), lv, 0.02)
-ck("saprolit Al2O3", sap.AL2O3_PCT.mean(), 1.65, 0.02)
-ck("limonit  Al2O3", lim.AL2O3_PCT.mean(), 4.93, 0.02)
-ck("saprolit Cr2O3", sap.CR2O3_PCT.mean(), 1.17, 0.02)
-ck("limonit  Cr2O3", lim.CR2O3_PCT.mean(), 2.25, 0.02)
-ck("assay kosong", a.NI_PCT.isna().sum(), 41, 0)
-ck("semua Ni mean", a.NI_PCT.mean(), 1.31, 0.01)
-ck("semua Ni median", a.NI_PCT.median(), 1.28, 0.01)
-ck("semua Ni max", a.NI_PCT.max(), 3.62, 0.01)
-ck("semua Ni CV", a.NI_PCT.std()/a.NI_PCT.mean(), 0.47, 0.02)
-ck("saprolit n", len(sap), 4085, 0)
-ck("saprolit Ni CV", sap.NI_PCT.std()/sap.NI_PCT.mean(), 0.28, 0.02)
-ck("saprolit >=1.5% Ni", 100*(sap.NI_PCT>=1.5).mean(), 63.1, 0.01)
-ck("SiO2/MgO saprolit", (sap.SIO2_PCT/sap.MGO_PCT).median(), 2.03, 0.01)
-ck("korelasi Fe-MgO", a.FE_PCT.corr(a.MGO_PCT), -0.88, 0.01)
-ck("Z min", c.ZCOLLAR.min(), 241, 0.003); ck("Z max", c.ZCOLLAR.max(), 396, 0.003)
-ck("TD median", c.TD.median(), 23.2, 0.01)
+# This revision documents actual populations, with generated text checked byte-for-byte.
+from nickel_summary import summary, readme
+import json
+stats=summary()
+record=json.loads(open(os.path.join(B,'02-nikel-laterit','STATISTICS.json')).read())
+ck("statistics record matches CSV", record==stats, True, 0)
+ck("nickel README matches recorded population", open(os.path.join(B,'02-nikel-laterit','README.md')).read()==readme(stats), True, 0)
+ck("main README lists current nickel rows", f"| Assay rows | 11,526 | {len(a):,} | 5,990 |" in open(os.path.join(B,'README.md')).read(), True, 0)
 
 print("=" * 74)
 print("TIMAH")

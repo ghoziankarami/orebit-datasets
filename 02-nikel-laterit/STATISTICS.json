@@ -1,0 +1,49 @@
+{
+  "holes": 350,
+  "survey_rows": 700,
+  "assay_rows": 8211,
+  "lithology_rows": 1371,
+  "drilled_m": 8131.7,
+  "valid_ni": 8175,
+  "missing_ni": 36,
+  "aborted_holes": 10,
+  "ni_mean": 1.3046678899082569,
+  "ni_median": 1.269,
+  "ni_max": 3.892,
+  "ni_cv": 0.46746214088411453,
+  "fe_mgo_r": -0.8809024933719471,
+  "horizons": {
+    "OVB": {
+      "rows": 426,
+      "valid_ni": 423,
+      "ni_mean": 0.707468085106383,
+      "ni_cv": 0.19915837789409427,
+      "density_mean": 1.5324882629107979,
+      "thickness_mean": 1.283132530120482
+    },
+    "LIM": {
+      "rows": 2536,
+      "valid_ni": 2524,
+      "ni_mean": 1.1701620443740095,
+      "ni_cv": 0.20762207225905885,
+      "density_mean": 1.460500788643533,
+      "thickness_mean": 7.26647564469914
+    },
+    "SAP": {
+      "rows": 4224,
+      "valid_ni": 4206,
+      "ni_mean": 1.6926526390870187,
+      "ni_cv": 0.28709799741552505,
+      "density_mean": 1.6423200757575758,
+      "thickness_mean": 12.066285714285714
+    },
+    "BRK": {
+      "rows": 1025,
+      "valid_ni": 1022,
+      "ni_mean": 0.2872945205479452,
+      "ni_cv": 0.17448353778602244,
+      "density_mean": 2.605736585365854,
+      "thickness_mean": 2.7838235294117646
+    }
+  }
+}

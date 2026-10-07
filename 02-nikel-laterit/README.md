@@ -1,107 +1,57 @@
-# 02 — Nickel Laterite (synthetic)
+# Lamonto — synthetic nickel laterite
 
-Fictional block **"Lamonto"**. Modelled on the nickel laterite profiles
-developed over ultramafic bedrock in Southeast Sulawesi and Halmahera
-(Sorowako, Pomalaa, Weda Bay as style analogues). No real data.
+A fictional tropical ultramafic prospect. The 350-hole programme follows a curved, strike-oriented footprint; its boundary is a sampling design, not an ore shell. All data are synthetic, CC BY 4.0, credit Orebit.id.
 
-## The deposit
+## Geological model
 
-A weathering profile, not an intrusion. Everything about the data follows from
-that: the geology is layered and sub-horizontal, thickness is controlled by
-topography, and grade varies smoothly.
+Ferricrete/overburden → limonite → saprolite → fresh peridotite. Laterite thickness follows slope: preserved on gentler crests and thinner on steeper slopes. Nickel peaks in upper saprolite, cobalt near the limonite/saprolite transition, while Fe decreases and MgO increases downward. The correlation lengths in the generator are model assumptions, not a fitted resource variogram.
 
-Profile from surface down:
+| Horizon | Meaning | Mean logged thickness (m) | Valid Ni samples | Mean Ni (%) | Mean measured SG (t/m³) |
+| --- | --- | ---: | ---: | ---: | ---: |
+| OVB | Ferricrete / overburden | 1.28 | 423 | 0.707 | 1.532 |
+| LIM | Limonite | 7.27 | 2,524 | 1.170 | 1.461 |
+| SAP | Saprolite | 12.07 | 4,206 | 1.693 | 1.642 |
+| BRK | Fresh bedrock penetrated by drilling | 2.78 | 1,022 | 0.287 | 2.606 |
 
-| Horizon | Code | Thickness | Character |
-|---|---|---|---|
-| Ferricrete / iron cap | `OVB` | 0.3–3 m | Fe ~49%, Ni <0.9%, waste |
-| Limonite | `LIM` | mean 7.9 m | Ni ~1.2%, Fe ~42%, MgO ~4% — Co ore |
-| Saprolite | `SAP` | mean 11.7 m | Ni ~1.7%, Fe ~15%, MgO ~18% — Ni ore |
-| Bedrock (peridotite) | `BRK` | drilled 2–3.5 m | Ni ~0.3%, MgO ~37% |
+## Drilling and files
 
-Built into the model:
+**350 vertical holes, 8,131.7 m drilled.** Regional spacing is 100 m with selective 50 m infill following the prospect centre. Collars have small field-position scatter. This keeps a useful clustering exercise without a rectangular prospect outline.
 
-- **Laterite thickness tracks slope.** Thick on gentle crests where the
-  profile is preserved, thin on steep slopes where it has been stripped.
-  Topography and thickness are genuinely linked, not independent noise.
-- **Fe and MgO are strongly anti-correlated (r = −0.88).** Fe falls and MgO
-  rises down the profile as serpentine survives and iron oxides are left
-  behind. Everything else follows the same logic.
-- **Nickel peaks in the upper saprolite** and declines toward bedrock — the
-  classic supergene enrichment position, not the top of the hole.
-- **A thin cobalt spike at the limonite/saprolite boundary**, the manganese
-  oxide horizon. Co in limonite averages 0.119% against 0.051% in saprolite.
-- **Extreme anisotropy.** Grade continuity runs ~170 m laterally against a few
-  metres vertically. Any isotropic search ellipse gets this badly wrong.
+- collar.csv: 350 rows; BHID, XCOLLAR, YCOLLAR, ZCOLLAR, TD. Fictional WGS84 / UTM 51S coordinates, metres.
+- survey.csv: 700 rows; BHID, AT, AZ, DIP. Positive-down dip: 90° is vertical.
+- assay.csv: 8,211 intervals, nominally 1 m; Ni, Co, Fe, MgO, SiO₂, Al₂O₃, Cr₂O₃ in percent and SG in t/m³.
+- litho.csv: 1,371 intervals; BHID, FROM, TO, LITH.
 
-## The drilling
+10 holes stop in the weathered profile before fresh bedrock. 36 intervals have missing assays; measured SG is retained. Missing grades are blanks, not zeros.
 
-350 vertical holes for **8,195 m**.
+## Sample statistics
 
-- **100 m regional grid**, with a **50 m infill block** in the centre
-  (X 700–1100, Y 600–1000 local) — a realistic staged programme, and a
-  built-in exercise in clustered sampling
-- Collars scatter ~1.6 m from the planned grid node, as they do in the field
-- 1.0 m samples from surface to total depth
-- Holes stop 2–3.5 m into fresh bedrock; **8 holes were abandoned** in
-  saprolite without reaching it
+These are unweighted sample statistics; they are not resource grades or contained metal. The active domain, composite support, density, search and geometry must be recorded separately when estimating.
 
-## Files
+Valid Ni n=8,175; mean **1.305%**, median 1.269%, maximum 3.892%, sample CV **0.467**. Fe–MgO correlation **-0.881**.
 
-**collar.csv** — 350 rows · `BHID, XCOLLAR, YCOLLAR, ZCOLLAR, TD`
-`LMT-0001` … `LMT-0350`. UTM 51S, WGS 84 (Southeast Sulawesi).
-Elevation 241–396 m. TD 5.8–43.0 m, median 23.2 m.
+The full-precision sampled populations and counts are in STATISTICS.json. Opening all domains together mixes different weathering horizons; compare limonite and saprolite separately.
 
-**survey.csv** — 700 rows. Two records per hole, AZ 0 / DIP 90 (vertical).
+## Use in GeoSuite
 
-**assay.csv** — 8,278 rows, 1.0 m intervals
+1. Core: import all four tables; inspect linkage, missing assays, intervals and survey convention.
+2. Assay: inspect distributions by horizon and record the composite length and any treatment.
+3. Resource: choose the geological population and unit; inspect coverage, fit/test directional continuity, choose geometry and density, estimate, validate, then report a justified optional cutoff.
 
-| Column | Unit | Saprolite mean | Limonite mean |
-|---|---|---|---|
-| NI_PCT | % | 1.72 | 1.19 |
-| CO_PCT | % | 0.051 | 0.119 |
-| FE_PCT | % Fe elemental | 15.1 | 42.1 |
-| MGO_PCT | % | 18.1 | 3.8 |
-| SIO2_PCT | % | 36.2 | 12.0 |
-| AL2O3_PCT | % | ~1.7 | ~5.0 |
-| CR2O3_PCT | % | ~1.2 | ~2.3 |
-| SG | | 1.65 | 1.46 |
+Carry measured SG through Core → Assay → Resource. A single assumed density needs its own justification; it should not silently replace measured values. The footprint is not a geological boundary, and the sample is not a certified resource.
 
-41 intervals have all assays blank (lost sample). Oxide totals sum to ~82%;
-the balance is loss on ignition, which is not reported — as in most real
-laterite databases.
+## Core validation exercises
 
-**litho.csv** — 1,366 rows · `BHID, FROM, TO, LITH` with `OVB`, `LIM`, `SAP`,
-`BRK`.
+See ../exercises/README.md for a missing-survey case and an overlapping-assay case. They are deliberately incomplete/invalid copies for teaching validation. Use the four tables in this directory for the main workflow.
 
-## Statistics
-
-All samples, n = 8,247 assayed: Ni mean **1.31%**, median 1.28%, max 3.62%,
-**CV 0.47**.
-
-Saprolite only, n = 4,085: Ni mean **1.72%**, median 1.67%, **CV 0.28**.
-63.1% of saprolite samples are at or above a 1.5% Ni cut-off.
-Median SiO₂/MgO ratio in saprolite **2.03**.
-
-That CV of 0.28 is the headline. This is about as well-behaved as grade data
-gets, and it is a completely different estimation problem from the gold.
-
-## What this one is good for
-
-- **Anisotropic search and variography.** Get the ratio wrong and the model
-  smears grade vertically through horizons that do not connect.
-- **Declustering.** The 50 m infill block over a 100 m grid biases naive
-  global statistics upward. This is the cleanest teaching example of it.
-- **Horizon-based domaining.** Estimating across the limonite/saprolite
-  boundary is the classic laterite mistake — Fe and MgO make it obvious.
-- **Multivariate work.** Seven correlated elements with real geochemical
-  structure: Fe–MgO regression, SiO₂/MgO classification, Co–Mn association.
-- **Density by horizon.** SG ranges 1.46 to 2.6. A single global density
-  produces a badly wrong tonnage.
-
-## Regenerate
+## Reproduce
 
 ```bash
-python3 ../_generator/gen_nikel.py
+python _generator/gen_nikel.py
+python _generator/nickel_summary.py
+python _generator/make_core_exercises.py
+python _generator/validate.py
+python _generator/check_readme.py
 ```
-Seed `20260830`.
+
+Run from the repository root. Generator seed 20260830; layout uses nickel_layout.py. Reproducibility also requires the pinned NumPy/Pandas versions in _generator/requirements.txt.

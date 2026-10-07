@@ -86,3 +86,7 @@ CRS and units. This proves the files match that manifest; it does not validate
 geology or authenticate a download without a trusted source/checksum. CI keeps
 a snapshot artifact for each successful check. Published releases, when
 available, are separate from CI artifacts; the source ZIP remains usable.
+
+## Nickel revision1.1.0
+
+The synthetic collar programme now follows an irregular strike-oriented prospect, with selective infill. This is a sampling footprint, not a geological resource shell. Current counts and sampled statistics are in `02-nikel-laterit/STATISTICS.json`. The built-in app sample changes only when a matching GeoSuite build is published. Keep blank grades as missing, retain measured SG through the handoffs, and estimate LIM/SAP separately when that is your justified geological interpretation. [Core exercises](../exercises/README.md) deliberately omit survey records or introduce an overlapping assay; fix and revalidate before exporting.

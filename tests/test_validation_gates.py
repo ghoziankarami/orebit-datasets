@@ -19,6 +19,7 @@ class ValidationGates(unittest.TestCase):
         for folder in FOLDERS:
             shutil.copytree(ROOT / folder, self.root / folder)
         shutil.copytree(ROOT / "_generator", self.root / "_generator")
+        shutil.copyfile(ROOT / "README.md", self.root / "README.md")
 
     def tearDown(self):
         self.tmp.cleanup()
