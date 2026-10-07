@@ -23,7 +23,7 @@ for name in ("missing-survey", "overlapping-assay"):
         duplicate["FROM"] = str((float(duplicate["FROM"]) + float(duplicate["TO"])) / 2)
         rows.insert(1, duplicate)
     with (dest / f"{table}.csv").open("w", newline="") as f:
-        writer = csv.DictWriter(f, header)
+        writer = csv.DictWriter(f, header, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 (ROOT / "exercises/README.md").write_text("""# Core validation exercises
