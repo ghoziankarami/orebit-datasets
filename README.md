@@ -246,4 +246,4 @@ Both checker commands return a nonzero exit status when their checks fail. The s
 
 ## Core validation exercises
 
-[Three deliberate failure cases](exercises/README.md) teach missing surveys, overlapping assays, orphan records and missing geology. The main nickel files and default app sample retain the valid workflow.
+[Three deliberate failure cases](exercises/README.md) teach missing surveys, overlapping assays, orphan records and missing geology. The main nickel files remain the corrected sources. Current GeoSuite Core builds start with the missing-collar-and-geology case; users inspect Validation, download originals and reimport before continuing. Assay/Resource retain prepared data from the complete sources.
