@@ -13,6 +13,7 @@ Perbandingan untuk setiap metode adalah **GeoSuite E7 ↔ Python**, bukan memaks
 | Empat CSVraw |Checksum identik;340 collar / 680 survey / 8.751 assay / 1.344 lithology|
 | Solid SAP |Seluruh vertex/face dan hash sama persis dengan Core E7; pair: 680 vertex / 1.356 face, loft: 111 vertex / 218 face|
 | Domain LIM konteks pair |Volume/hash dari Core yang sama dicatat; Resource baseline tetap SAP|
+| EDA dalam domain | Pair 4.122 parent / 0 crossing; loft 249 parent / 32 crossing; dukungan serta mean diagnostik tanpa bobot dilaporkan terpisah |
 | Komposit 2 m |Pair 2.139, loft 124; dihitung dari raw, boundary support/missing tetap eksplisit|
 | Handoff |Derived mean pada 10 desimal sesuai kontrak Assay→Resource; tidak membulatkan/mengubah kadar mentah|
 | Variogram EW / NS / vertikal / omni |Lag/bins/maxdistance/toleransi, jumlah pasangan dan gamma dibandingkan dengan UI. NS pada loft: 2 bin / 508 pasangan ditolak sama seperti UI|
