@@ -4,6 +4,10 @@
 
 Notebook memakai **empat CSV untuk 340 lubang yang sama dengan demonstrasi**, bukan tombol Sample Core. Sel pertama memakai paket publik yang dipatok commit/hash; tidak perlu akses orebit-ops privat. Input dataset/ tidak ditimpa; hasil sendiri tersimpan di hasil-python/. Python 3.12 dan requirements.txt adalah baseline pemeriksaan. GeoSuite browser tidak memerlukan Python.
 
+## Pilihan membaca
+
+[Baca surface-pair tanpa kode](GeoSuite_Workshop_Nickel_Baca.md) · [Baca loft tanpa kode](GeoSuite_Workshop_Nickel_Loft_Baca.md). Sel notebook kini hanya panggilan singkat; implementasi terbuka ada di geosuite_workshop_engine.py. Masing-masing mempunyai12figur aktual dengan histogram unsur/oksida, korelasi gabungan vsSAP, scatter perlitologi, distribusi gradeblok, perbandingan metode, peta dan rekonsiliasi tonase/metal.
+
 ## Yang sekarang harus sama
 
 Perbandingan untuk setiap metode adalah **GeoSuite E7 ↔ Python**, bukan memaksa surface-pair dan loft mempunyai footprint sama.
@@ -37,7 +41,7 @@ Assertion meminta kesamaan angka tampilan2desimal, rekonsiliasi volume/massa/mea
 
 ## Cara membaca hasil dan batasnya
 
-Setiap notebook mempunyai12 sel kode yang diperiksa berurutan, tabel hasil terisi dan grafikPNG dari kalkulasi nyata. FormatJSON divalidasi terhadap schema resmi nbformat4. Grafik ditautkan sebagai filePNG agar artefak mudah diperiksa tanpa encodedimage besar; saat menjalankan kernel, grafik baru juga muncul dari kode. Gambar ini bukan screenshotUI atau AI.
+Setiap notebook mempunyai14 sel kode yang diperiksa berurutan, tabel hasil terisi dan 12figurPNG dari kalkulasi nyata. FormatJSON divalidasi terhadap schema resmi nbformat4. Grafik ditautkan sebagai filePNG agar artefak mudah diperiksa tanpa encodedimage besar; saat menjalankan kernel, grafik baru juga muncul dari kode. Gambar ini bukan screenshotUI atau AI.
 
 **Pemeriksaan ini menggunakan runnerPython berurutan; eksekusi kernel Jupyter/Colab di cloud belum diverifikasi karena izin instalasi sementara masih pending.** Jangan menyebutnya uji peserta/perangkat. Membaca hasil di GitHub tidak memerlukan instalasi. Konfirmasi jalur kernel peserta sebelum menjadikannya fallback acara.
 
