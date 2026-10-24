@@ -1,42 +1,49 @@
-# Notebook Python pendamping GeoSuite
+# Notebook pendamping GeoSuite — baseline yang sama dengan UI
 
-[Buka notebook dan hasilnya](GeoSuite_Workshop_Nickel.ipynb). Ini memakai **empat CSV340lubang yang sama** dengan paket workshop, bukan tombol Sample bawaan Core.
+[Buka surface-pair](GeoSuite_Workshop_Nickel.ipynb) · [Buka loft](GeoSuite_Workshop_Nickel_Loft.ipynb). GitHub menampilkan kode, tabel dan grafik aktual; untuk menjalankan, unduh `.ipynb`, buka di Jupyter yang tersedia atau Colab → File → Upload notebook, lalu **Run All**.
 
-## Cara menggunakan
+Notebook memakai **empat CSV untuk 340 lubang yang sama dengan demonstrasi**, bukan tombol Sample Core. Sel pertama memakai paket publik yang dipatok commit/hash; tidak perlu akses orebit-ops privat. Input dataset/ tidak ditimpa; hasil sendiri tersimpan di hasil-python/. Python 3.12 dan requirements.txt adalah baseline pemeriksaan. GeoSuite browser tidak memerlukan Python.
 
-1. Untuk membaca, buka `.ipynb` di GitHub: kode, tabel dan grafik sudah terisi.
-2. Untuk menjalankan, unduh notebook lewat **Download raw file**. Buka dengan Jupyter yang tersedia, atau Colab → **File → Upload notebook**. GitHub sendiri bukan kernel interaktif.
-3. Jalankan **Run All**. Dataset lokal yang sudah diekstrak diperiksa checksum-nya. Bila belum ada, sel pertama mengunduh paket publik yang dipatok commit/hash; tidak memakai akses orebit-ops privat.
-4. Mulai dengan `MODE='pair'`. Untuk interpretasi loft, ubah menjadi `MODE='loft'` dan jalankan ulang semua sel dari lingkungan bersih. Jangan membandingkan total kedua footprint sebagai bias metode.
-5. Hasil sendiri disimpan pada `hasil-python/`; input `dataset/` tidak ditimpa.
+## Yang sekarang harus sama
 
-Untuk environment Python terpisah, gunakan Python3.12 dan dependensi pada `requirements.txt`. Jupyter/Colab frontend yang sah tetap diperlukan. Tidak ada instalasi otomatis ke environment global dalam notebook.
+Perbandingan untuk setiap metode adalah **GeoSuite E7 ↔ Python**, bukan memaksa surface-pair dan loft mempunyai footprint sama.
 
-## Yang benar-benar diperiksa
+| Kontrak baseline | Pemeriksaan |
+|---|---|
+| Empat CSVraw |Checksum identik;340 collar / 680 survey / 8.751 assay / 1.344 lithology|
+| Solid SAP |Seluruh vertex/face dan hash sama persis dengan Core E7; pair: 680 vertex / 1.356 face, loft: 111 vertex / 218 face|
+| Domain LIM konteks pair |Volume/hash dari Core yang sama dicatat; Resource baseline tetap SAP|
+| Komposit 2 m |Pair 2.139, loft 124; dihitung dari raw, boundary support/missing tetap eksplisit|
+| Handoff |Derived mean pada 10 desimal sesuai kontrak Assay→Resource; tidak membulatkan/mengubah kadar mentah|
+| Variogram EW / NS / vertikal / omni |Lag/bins/maxdistance/toleransi, jumlah pasangan dan gamma dibandingkan dengan UI. NS pada loft: 2 bin / 508 pasangan ditolak sama seperti UI|
+| Model final |Pair spherical: `nugget=0.1461`, `sill=0.2656`, `range=546.3 m`. Loft spherical:`nugget=0.1621`, `sill=0.4052`, `range=56.3 m`. SaranAutoFit tidak otomatis menjadi keputusan geologi|
+| Search |250/250/50m, azimuth 0°, dip 0°,min 2, max 12, tanpa octant/holecap/secondpass; semua applied fields diperiksa|
+| Grade blokNN/IDW/OK |Kadar tersimpanFloat32 harus sama persis pada 2.237 blok pair dan 56 blok loft; hitunganDouble juga diaudit|
+| Kriging variance / jumlah tetangga | KRIGE_VAR cocok dengan presisi ekspor UI; jumlah tetangga per blok sama persis |
+| Cross-Val |Targetseed dan kebijakan neighbour/tie native sama:200 observasi pair / 124 loft; semua prediksi/metric dibandingkan|
+| Grade–tonnage |Seluruh cutoff 0–3% Ni dibandingkan, memakai gradeFloat32 dan scope/density yang sama|
 
-- Dua mode, masing-masing12sel kode, dieksekusi berurutan dengan Python3.12/NumPy2.3.5/SciPy1.17.0/pandas2.2.3/matplotlib3.10.8: **PASS**. Format JSON notebook divalidasi terhadap schema resmi nbformat4.
-- Raw input dan checksum tetap; compositepair2139/loft124; supportpair4122m/loft232.26051110387328m.
-- Perbandingan NN/IDW/OK: pair2237blok dan loft56blok. Max grade difference keseluruhan6.085749633122362e-7percentagepoints; batas berasal dari half-ULPFloat32 + pembulatan ekspor6desimal + condition-aware solver, bukan persen toleransi arbitrer.
-- Whole-mesh/supportvolume/tonase, mean grade dan containedmetal direkonsiliasi pada scope yang sama. Plot memakai hasil perhitungan aktual.
-- **Ini pemeriksaan sel dengan runner Python, bukan klaim eksekusi kernel Jupyter/Colab atau uji peserta/perangkat.** Verifikasi kernel pada cloud masih menunggu izin instalasi environment sementara. Ini tidak menghalangi membaca kode/hasil di GitHub; konfirmasi jalur Jupyter peserta sebelum menjadikannya fallback acara.
+## Tonase akhir wajib sama
 
-## Batas ilmiah
+Hasil dibandingkan dengan ekspor perjalanan UI asli **GeoSuite e7f79300**, density 1,6 t/m³, cutoff 0% Ni, SAP dan dukungan blok yang sama:
 
-Interpretasi solid, koordinat geometri presisi penuh dan clipped block support diberikan dari reference GeoSuite. Python menghitung clipping raw, komposit dan estimasi; ia tidak membuktikan ulang seluruh geometri/tinjauan geologi. Survey contoh vertikal; spesialisasi ini menolak survey miring. Variogram Python omnidirectional; contoh LOO30observasi bukan leave-one-hole-out atau semua konfigurasi UI.
+| Interpretasi | TonaseUI | TonasePython |
+|---|---:|---:|
+| Surface-pair |21.298.329,56t|21.298.329,56t|
+| Loft |684.068,61t|684.068,61t|
 
-CSV display membulatkan koordinat: memakai angka tersebut untuk benchmark dapat mengubah pilihan12tetangga dekat tie. File `geometry-full-precision.json` mempertahankan input geometri asli yang dinyatakan jelas; parameter/kadar tidak diubah agar cocok.
+Assertion meminta kesamaan angka tampilan2desimal, rekonsiliasi volume/massa/mean/metal, serta seluruh kurva cutoff. Toleransi kalkulasi mengikuti Float32/exportprecision/condition-aware solver dan presisi agregasi, bukan persentase arbitrer.
 
-Tidak ada klaim sign-off CP, compliance SNI/KCMI/JORC, owner acceptance39layar, deployment, atau validasi profesional independen. Data/kode pendidikan ini CC BY4.0 dengan kredit Ghozian Karami/Orebit.id; source aplikasi GeoSuite mempunyai lisensinya sendiri.
+## Cara membaca hasil dan batasnya
 
-## Tonase akhir wajib sama dengan UI
+Setiap notebook mempunyai12 sel kode yang diperiksa berurutan, tabel hasil terisi dan grafikPNG dari kalkulasi nyata. FormatJSON divalidasi terhadap schema resmi nbformat4. Grafik ditautkan sebagai filePNG agar artefak mudah diperiksa tanpa encodedimage besar; saat menjalankan kernel, grafik baru juga muncul dari kode. Gambar ini bukan screenshotUI atau AI.
 
-Perbandingan langsung dengan ekspor perjalanan UI asli **GeoSuite e7f79300**, dataset340dan parameter sama (density1,6t/m³, cutoff0%Ni):
+**Pemeriksaan ini menggunakan runnerPython berurutan; eksekusi kernel Jupyter/Colab di cloud belum diverifikasi karena izin instalasi sementara masih pending.** Jangan menyebutnya uji peserta/perangkat. Membaca hasil di GitHub tidak memerlukan instalasi. Konfirmasi jalur kernel peserta sebelum menjadikannya fallback acara.
 
-| Interpretasi | Blok terestimasi | Tonase UI | Tonase Python | Selisih |
-|---|---:|---:|---:|---:|
-| Surface-pair |2237|21.298.329,56t|21.298.329,56t|0t|
-| Loft |56|684.068,61t|684.068,61t|0t|
+Interpretasi solid dan clipped block support diberikan sebagai input dari GeoSuite; ini membuktikan kesetaraan input/hasil baseline, **bukan rekonstruksi geologi independen**. Survey contoh vertikal; notebook menolak data miring. Final scalar model yang sama tidak otomatis cocok untuk setiap arah; perbedaan kontinuitas vertikal tetap bahan interpretasi, bukan ditutupi dengan mengganti parameter.
 
-Selisih nol juga terukur pada nilai double dari CSVnative, sebelum pembulatan tabel ini. Assertion notebook juga meminta nilai yang ditampilkan2desimal sama. Dukungan blok memang diberikan dari GeoSuite; tabel ini tidak mengklaim validasi clipping geometri independen. Ini bukan bukti bahwa build publik yang berbeda di orebit.id sudah sama; versi/dataset/parameter UI harus dikonfirmasi.
+KonvensiCV native baseline tanpa hole-cap memilih hingga 12 kandidat termasuktarget, lalu menghapusself; bisa tersisa11 neighbour. Notebook mengikuti konvensi ini, bukan menganggap semua desainCV ekuivalen. r² mengikuti korelasiPearson kuadrat UI, bukan1−SSE/SST; bukan leave-one-hole-out.
 
-[Notebook loft dengan hasil terisi](GeoSuite_Workshop_Nickel_Loft.ipynb) tersedia bila ingin membaca interpretasi alternatif tanpa menjalankan ulang modepair. Grafik yang tertanam sebagai tautan PNG adalah hasil perhitungan aktual, bukan screenshotUI atau gambarAI. Verifikasi live staging/owner acceptance tetap terpisah; pembaruan staging sedang ditahan untuk review.
+Ini tidak mengklaim semua opsiUI / 39 layar telah direplikasi/accepted, sign-off geolog/CP, complianceSNI / KCMI / JORC, atau kesamaan dengan build publik yang berbeda. Source/version/dataset/parameter UI harus dicatat. Staging sedang ditahan untuk review pemilik; notebook bukan approval deployment.
+
+Data/kode pendidikan: CC BY4.0, kredit Ghozian Karami/Orebit.id; source aplikasi GeoSuite mempunyai lisensi sendiri. Konfigurasi/provenance dan referensi metode tersimpan pada output/ paket. Gunakan salinan eksperimen untuk parameter lain dan jangan menyebut hasilnya matched tanpa perbandingan baru.
