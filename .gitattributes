@@ -2,3 +2,5 @@
 *.py  text eol=lf
 *.md  text eol=lf
 *.png binary
+# Preserve the byte-level hashes recorded inside the workshop package.
+workshops/2026-11-05/v4/** -text
