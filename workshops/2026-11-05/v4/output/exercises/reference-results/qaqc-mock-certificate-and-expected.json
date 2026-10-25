@@ -1,0 +1,36 @@
+{
+  "synthetic_only": true,
+  "mock_certificate_not_real_CRM": true,
+  "group": "SIMNI",
+  "unit": "Ni elemental mass percent",
+  "mean": 1.0,
+  "sd": 0.04,
+  "declared_teaching_DL": 0.01,
+  "UI_DL_behavior": "smallest positive observed value proxy; coincides with .01 here by construction, not a laboratory DL import",
+  "crm_z": [
+    0,
+    2,
+    5
+  ],
+  "crm_failure_indices": [
+    2
+  ],
+  "blank_ratios": [
+    1,
+    8
+  ],
+  "blank_flag_indices": [
+    1
+  ],
+  "hard_percent": [
+    2.439024390243905,
+    27.27272727272727,
+    4.761904761904765
+  ],
+  "hard_threshold_percent": 20,
+  "normal_count": 3,
+  "duplicate_count": 3,
+  "blank_count": 2,
+  "crm_count": 3,
+  "estimation_use": "never: standalone QAQC exercise, no spatial/resource handoff"
+}

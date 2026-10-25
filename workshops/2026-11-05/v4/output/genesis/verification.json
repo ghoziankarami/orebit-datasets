@@ -1,0 +1,25 @@
+{
+  "version": "v4",
+  "seed": 20261025,
+  "rows": 8751,
+  "missing_per_grade": 34,
+  "Ni_Co_geometry_unchanged": true,
+  "newly_simulated": [
+    "FE_PCT",
+    "MGO_PCT",
+    "SIO2_PCT",
+    "AL2O3_PCT",
+    "CR2O3_PCT",
+    "SG"
+  ],
+  "main_partial_sum_over100": 0,
+  "maximum_component_closure_error": 5.684341886080802e-14,
+  "legacy_v3_unchanged_sha256": "e0f3e5c0d47ba9c31d44dfddd46375592cc885cbcf372ac50ecf9aea90d60aff",
+  "not_measured_mineralogy_or_bulk_density": true,
+  "raw_sha256": {
+    "dataset/assay.csv": "9513a1b59bf3570d517c7684bd22373bc6f7b48e2090c4c4b31d77d5916919a6",
+    "dataset/litho.csv": "d92b1b6f8acb64be66b7efeb0fbbda61d99c642bc5e697ec9ec443493a433faf",
+    "dataset/survey.csv": "f13a697ab58effe288a8f9a1a78efaa87660206f03945422b7b92dc84f7b74a9",
+    "dataset/collar.csv": "d9f2283c50127666f4de76b6b7d4faab6e8177a8e6edab4ef081d6ffd2e95359"
+  }
+}

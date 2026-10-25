@@ -1,0 +1,11 @@
+BHID,FROM,TO,NI_PCT,CO_PCT,FE_PCT,MGO_PCT,SIO2_PCT,AL2O3_PCT,CR2O3_PCT,SG,PARTIAL_ANALYTE_SUM_PCT,REVIEW_REASON
+LMT-0027,5.0,6.0,0.325,0.0241,7.71,45.0,47.37,1.21,0.562,2.85,102.2011,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0039,6.0,7.0,0.331,0.0234,7.59,45.0,48.01,1.23,0.568,2.85,102.7524,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0065,40.0,40.4,0.214,0.0153,6.68,44.62,48.03,1.1,0.507,2.68,101.1663,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0068,6.0,7.0,0.281,0.0192,8.18,43.36,46.9,1.22,0.606,2.72,100.56619999999998,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0100,20.0,21.2,0.31,0.0174,7.09,45.0,49.54,1.14,0.549,2.85,103.64640000000001,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0229,26.0,26.4,0.421,0.0141,7.28,41.57,49.19,1.37,0.515,2.85,100.3601,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0230,24.0,25.0,0.39,0.0168,6.83,44.12,47.38,1.19,0.52,2.85,100.4468,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0339,7.0,7.8,0.358,0.0225,7.07,45.0,48.23,0.94,0.58,2.85,102.20049999999999,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0344,22.0,23.0,0.358,0.0188,8.09,45.0,47.53,1.34,0.692,2.78,103.0288,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
+LMT-0344,24.0,24.3,0.356,0.0208,7.42,45.0,49.8,1.22,0.61,2.85,104.4268,Synthetic partial analyte sum >100%; verify analytical basis and source; no automatic normalization/exclusion
