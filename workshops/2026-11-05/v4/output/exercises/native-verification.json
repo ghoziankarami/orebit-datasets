@@ -1,0 +1,70 @@
+{
+  "source": "2eba1ff5ecca780252f68d58ff11d1f63ee0de8c",
+  "scope": "native CSV imports, independent curved-survey quadrature and synthetic QAQC verdicts; not full certification",
+  "survey": {
+    "holes": 3,
+    "stations": 12,
+    "positions_checked": 64,
+    "maximum_xyz_error_m": 7.451732649605301e-11,
+    "tolerance_m": 1e-07,
+    "oracle": "SciPy quad integration of spherical direction interpolation; raw survey synthetic",
+    "raw_preserved": true,
+    "merged_intervals": 52,
+    "maximum_merged_xyz_error_m": 7.451732649605301e-11
+  },
+  "qaqc": {
+    "summary": {
+      "normal": 3,
+      "crm": 3,
+      "blank": 2,
+      "duplicate": 3,
+      "group": [
+        "SIMNI"
+      ],
+      "blankDL": 0.01,
+      "ratios": [
+        1,
+        8
+      ],
+      "badBlank": [
+        "BLANK-02"
+      ],
+      "hard": [
+        {
+          "hole": "CTRL03",
+          "hard": 4.761904761904765
+        },
+        {
+          "hole": "CTRL01",
+          "hard": 2.439024390243905
+        },
+        {
+          "hole": "CTRL02",
+          "hard": 27.27272727272727
+        }
+      ]
+    },
+    "verdict": {
+      "failed": 1,
+      "ok": 0,
+      "verdict": {
+        "z": [
+          0,
+          2.0000000000000018,
+          4.999999999999999
+        ],
+        "failures": [
+          2
+        ],
+        "verdict": "fail"
+      },
+      "cert": {
+        "mean": 1,
+        "sd": 0.04
+      }
+    },
+    "raw_preserved": true,
+    "certificate": "SIMNI fictional teaching values only; UI blank DL proxy documented, not laboratory DL import"
+  },
+  "PASS": true
+}

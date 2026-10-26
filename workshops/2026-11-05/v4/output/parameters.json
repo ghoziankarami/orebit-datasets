@@ -1,0 +1,300 @@
+{
+  "app": "GeoSuite browser v3.1.1",
+  "candidate_source": "c7522684ae3a574a9ade33f83a679f9e24180664",
+  "raw_counts": {
+    "collar": 340,
+    "survey": 680,
+    "assay": 8751,
+    "litho": 1344
+  },
+  "CRS": "EPSG:32751",
+  "contact_max_edge_m": 200,
+  "surface_recipes": {
+    "LIM_TOP": [
+      "LIM",
+      "first_from"
+    ],
+    "SAP_TOP": [
+      "SAP",
+      "first_from"
+    ],
+    "SAP_BASE": [
+      "SAP",
+      "last_to"
+    ]
+  },
+  "paired_solids": {
+    "SAP": [
+      "SAP_TOP",
+      "SAP_BASE"
+    ],
+    "LIM": [
+      "LIM_TOP",
+      "SAP_TOP"
+    ]
+  },
+  "assay": {
+    "element": "ni_pct",
+    "domain": "SAP",
+    "boundary": "hard",
+    "final_cap": "none;2pct sensitivity undone",
+    "composite_m": 2
+  },
+  "grid": {
+    "size_m": [
+      100,
+      100,
+      2
+    ],
+    "density_t_m3": 1.6
+  },
+  "search": {
+    "rMaj": 250,
+    "rSemi": 250,
+    "rMin": 50,
+    "azDeg": 0,
+    "dipDeg": 0,
+    "minNeighbors": 2,
+    "maxNeighbors": 12,
+    "maxPerHole": 0,
+    "secondPass": false,
+    "secondPassFactor": 2,
+    "secondPassMin": 4,
+    "useOctant": false,
+    "domainBoundary": true
+  },
+  "variogram": {
+    "horizontal_lag_m": 50,
+    "max_distance_m": 500,
+    "bins": 10,
+    "tolerance_degrees": 22.5,
+    "vertical_lag_m": 2,
+    "vertical_max_distance_m": 20
+  },
+  "models": {
+    "pair": {
+      "type": "spherical",
+      "nugget": 0.1461,
+      "sill": 0.2656,
+      "range": 546.3,
+      "covarianceMode": "model-range"
+    },
+    "loft": {
+      "type": "spherical",
+      "nugget": 0.1621,
+      "sill": 0.4052,
+      "range": 56.3,
+      "covarianceMode": "model-range"
+    }
+  },
+  "grade_tonnage": {
+    "cutoffs_percent": [
+      0,
+      0.5,
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "classes": "all,diagnostic only"
+  },
+  "classification": "confidence screening only;RPE unchecked;no reported Mineral Resource",
+  "expected": {
+    "pair": {
+      "reference_scenario_source": "53248ff363040bd6c8f9f8e8fa4f1db5924b359b",
+      "domains_m3": {
+        "SAP": 15304948.715316297,
+        "LIM": 9120561.31720057
+      },
+      "eda": {
+        "status": "current",
+        "parents": 4122,
+        "crossing": 0,
+        "support": 4122,
+        "domains": [
+          "SAP"
+        ]
+      },
+      "composites_2m": 2139,
+      "estimated": {
+        "blocks": 2237,
+        "volume": 13311455.97601153,
+        "tonnes": 21298329.561618503,
+        "metalTonnes": 362199.3660791713,
+        "meanGrade": 1.7005998758319876,
+        "mt": 21.2983295616185,
+        "volMm3": 13.31145597601153
+      },
+      "gt": {
+        "cutoffs": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3
+        ],
+        "tons": [
+          21.2983295616185,
+          21.2983295616185,
+          21.281602224690594,
+          15.655781425518795,
+          3.273464058349505,
+          0.20513334775438222,
+          0
+        ],
+        "meanG": [
+          1.7005998758319876,
+          1.7005998758319876,
+          1.7011529848798743,
+          1.8307216289400818,
+          2.188679042737721,
+          2.6349773628664583,
+          null
+        ],
+        "blockCounts": [
+          2237,
+          2237,
+          2232,
+          1639,
+          339,
+          26,
+          0
+        ],
+        "useClass": false,
+        "min": 0,
+        "max": 3,
+        "steps": 7,
+        "quantityUnit": "Mt",
+        "resultRevision": 6,
+        "calculationSignature": "{\"model\":{\"type\":\"spherical\",\"nugget\":0.1461,\"sill\":0.2656,\"range\":546.3,\"covarianceMode\":\"model-range\"},\"search\":{\"rMaj\":250,\"rSemi\":250,\"rMin\":50,\"azDeg\":0,\"dipDeg\":0,\"minNeighbors\":2,\"maxNeighbors\":12,\"maxPerHole\":0,\"secondPass\":false,\"secondPassFactor\":2,\"secondPassMin\":4,\"useOctant\":false,\"domainBoundary\":true},\"element\":\"ni_pct\",\"domain\":\"all\",\"unit\":\"%\",\"filledSupport\":1}"
+      },
+      "composite_sensitivity": [
+        {
+          "length_m": 1,
+          "count": 4122,
+          "informed_length_m": 4122.0,
+          "grade_times_support": 6909.939
+        },
+        {
+          "length_m": 2,
+          "count": 2139,
+          "informed_length_m": 4122.0,
+          "grade_times_support": 6909.939
+        },
+        {
+          "length_m": 3,
+          "count": 1482,
+          "informed_length_m": 4122.0,
+          "grade_times_support": 6909.9389999986
+        }
+      ]
+    },
+    "loft": {
+      "reference_scenario_source": "53248ff363040bd6c8f9f8e8fa4f1db5924b359b",
+      "domains_m3": {
+        "SAP": 481793.0004068787
+      },
+      "eda": {
+        "status": "current",
+        "parents": 249,
+        "crossing": 32,
+        "support": 232.2605111038732,
+        "domains": [
+          "SAP"
+        ]
+      },
+      "composites_2m": 124,
+      "estimated": {
+        "blocks": 56,
+        "volume": 427542.88304861385,
+        "tonnes": 684068.6128777827,
+        "metalTonnes": 13835.500015480207,
+        "meanGrade": 2.0225310378261843,
+        "mt": 0.6840686128777826,
+        "volMm3": 0.4275428830486138
+      },
+      "gt": {
+        "cutoffs": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3
+        ],
+        "tons": [
+          0.6840686128777826,
+          0.6840686128777826,
+          0.6840686128777826,
+          0.6490173180656716,
+          0.33301847821458413,
+          0.12148340008989823,
+          0
+        ],
+        "meanG": [
+          2.0225310378261843,
+          2.0225310378261843,
+          2.0225310378261843,
+          2.057767493649344,
+          2.323593798595621,
+          2.5814768077113484,
+          null
+        ],
+        "blockCounts": [
+          56,
+          56,
+          56,
+          52,
+          22,
+          9,
+          0
+        ],
+        "useClass": false,
+        "min": 0,
+        "max": 3,
+        "steps": 7,
+        "quantityUnit": "Mt",
+        "resultRevision": 6,
+        "calculationSignature": "{\"model\":{\"type\":\"spherical\",\"nugget\":0.1621,\"sill\":0.4052,\"range\":56.3,\"covarianceMode\":\"model-range\"},\"search\":{\"rMaj\":250,\"rSemi\":250,\"rMin\":50,\"azDeg\":0,\"dipDeg\":0,\"minNeighbors\":2,\"maxNeighbors\":12,\"maxPerHole\":0,\"secondPass\":false,\"secondPassFactor\":2,\"secondPassMin\":4,\"useOctant\":false,\"domainBoundary\":true},\"element\":\"ni_pct\",\"domain\":\"all\",\"unit\":\"%\",\"filledSupport\":1}"
+      },
+      "composite_sensitivity": [
+        {
+          "length_m": 1,
+          "count": 241,
+          "informed_length_m": 232.26051,
+          "grade_times_support": 474.8068090952381
+        },
+        {
+          "length_m": 2,
+          "count": 124,
+          "informed_length_m": 232.26051,
+          "grade_times_support": 474.80681021763917
+        },
+        {
+          "length_m": 3,
+          "count": 84,
+          "informed_length_m": 232.26051,
+          "grade_times_support": 474.8068099265876
+        }
+      ]
+    }
+  },
+  "boundary_support_policy": {
+    "rule": "boundary is not automatically inside/outside",
+    "pair_boundary_holes": 38,
+    "pair_boundary_support_m": 468,
+    "pair_interior_holes": 302,
+    "pair_interior_support_m": 4122
+  },
+  "package_revision": "v4",
+  "native_ui_parity_source": "e7f79300ef474795a138f9226eec494e58abf903",
+  "cross_validation": {
+    "limit": 200,
+    "method": "native LOO, same targets/neighbour-selection policy"
+  },
+  "chemistry_revision": "New mineral-budget Fe/oxides/solid SG; Ni/Co/geometry frozen. Historical UI parity scope is Ni only."
+}
