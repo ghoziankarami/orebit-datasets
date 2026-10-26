@@ -12,6 +12,8 @@ manifest = json.loads((OUT / 'BUILD.json').read_text())
 assert manifest['version'] == 5
 for name, digest in manifest['files'].items():
     assert hashlib.sha256((OUT / name).read_bytes()).hexdigest() == digest, name
+    if name.endswith('.csv'):
+        assert all(not line.rstrip(b'\r\n').endswith((b' ', b'\t')) for line in (OUT / name).read_bytes().splitlines(keepends=True)), name
 for name in ['collar', 'survey', 'assay', 'litho']:
     assert (OUT / f'dataset/{name}.csv').read_bytes() == (BASE / f'v4/dataset/{name}.csv').read_bytes()
 
