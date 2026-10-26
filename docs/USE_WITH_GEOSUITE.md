@@ -9,7 +9,7 @@
    Untuk hanya membaca CSV atau mengimpor ke GeoSuite, Python tidak diperlukan.
 2. Pilih **satu** folder pada tabel berikut. Pakai `collar.csv`, `survey.csv`,
    `assay.csv`, dan `litho.csv` dari folder yang sama.
-3. Buka [GeoSuite Core](https://geosuite.orebit.id/try/Core.html), lalu tab impor
+3. Buka [GeoSuite Core](https://geosuite.orebit.id/Core.html), lalu tab impor
    **Import**. Pilih file sesuai jenisnya. Impor ini mengganti contoh bawaan;
    jangan campurkan file latihan dengan contoh Thalanga atau proyek lain.
 4. Periksa jumlah lubang dan baris assay. Cocokkan kolom koordinat, kedalaman,
@@ -34,8 +34,10 @@ endapan. Kredit: **Orebit Synthetic Drillhole Datasets, CC BY 4.0**.
 - Sel kosong berarti **nilai hilang**, bukan nol. Pastikan interval punya
   `TO > FROM` dan kedalaman tidak melewati `TD`.
 - `NI_PCT=1` berarti **1%**, bukan fraksi 1 atau 100%. `SN_KGM3` adalah kadar
-  volumetrik; jangan diperlakukan sebagai persen atau g/t. `SG`/`BD_TM3`
-  menyimpan densitas t/m³. Pertahankan satuan pada ekspor berikutnya.
+  volumetrik; jangan diperlakukan sebagai persen atau g/t. `SG` adalah specific
+  gravity tanpa dimensi; kesesuaiannya sebagai dry bulk density tidak otomatis
+  terbukti. Kolom bulk density seperti `BD_TM3` memerlukan satuan t/m³ dan
+  definisi pengukuran/asumsi yang jelas. Pertahankan satuan pada ekspor berikutnya.
 
 Jika jumlah tidak cocok, periksa folder dan kolom pemetaan, lalu impor ulang.
 Jika validasi menemukan kesalahan, baca baris yang ditunjuk dan perbaiki dulu.
