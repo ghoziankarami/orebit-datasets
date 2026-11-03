@@ -18,3 +18,17 @@ substitute DL/LOR. Do not include control rows in Resource estimation.
 The public archive is pinned by commit in the participant QR. No field data,
 laboratory certificate, geological sign-off, or Mineral Resource classification
 is implied.
+
+## Workshop notebook
+
+[`GeoSuite_Workshop_Nickel.ipynb`](GeoSuite_Workshop_Nickel.ipynb) repeats the
+GeoSuite Surface-pair and Loft workflow in Python and checks each result
+against the application. Outputs are saved in the file, so it can be read
+without running it.
+
+[Open in Google Colab](https://colab.research.google.com/github/ghoziankarami/orebit-datasets/blob/main/workshops/2026-11-05/GeoSuite_Workshop_Nickel.ipynb)
+
+To run it in Colab, choose **Runtime → Run all**. The first cell asks for the
+participant package ZIP (`Paket_Peserta_Workshop_ATI.zip`) distributed to
+workshop participants; the notebook extracts it and reads the CSV files and
+reference outputs from it.
