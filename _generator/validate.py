@@ -6,6 +6,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from package_snapshot import DATASETS
+
 BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 SETS = [("01-emas-epitermal", "AU_GPT", "g/t"),
         ("02-nikel-laterit", "NI_PCT", "%"),
@@ -35,6 +37,21 @@ for folder, gcol, unit in SETS:
     asy = pd.read_csv(os.path.join(d, "assay.csv"))
     lit = pd.read_csv(os.path.join(d, "litho.csv"))
 
+    required = {
+        "collar": (col, ["BHID", "XCOLLAR", "YCOLLAR", "ZCOLLAR", "TD"]),
+        "survey": (sur, ["BHID", "AT", "AZ", "DIP"]),
+        "assay": (asy, ["BHID", "FROM", "TO", *DATASETS[folder]["grade_units"]]),
+        "litho": (lit, ["BHID", "FROM", "TO", "LITH"]),
+    }
+    invalid_schema = False
+    for table, (frame, columns) in required.items():
+        missing = sorted(set(columns) - set(frame.columns))
+        chk(not missing, "%s kolom wajib tersedia (hilang=%s)" % (table, missing))
+        chk(not frame.empty, "%s memiliki baris data" % table)
+        invalid_schema |= bool(missing) or frame.empty
+    if invalid_schema:
+        continue
+
     print("\n" + "=" * 68)
     print(folder)
     print("=" * 68)
@@ -48,10 +65,33 @@ for folder, gcol, unit in SETS:
     chk(set(lit.BHID) <= set(col.BHID), "semua BHID litho ada di collar")
     chk(set(col.BHID) == set(sur.BHID), "setiap lubang punya survey")
 
+    for table, (frame, _) in required.items():
+        chk(frame.BHID.notna().all() and frame.BHID.astype(str).str.strip().ne("").all(),
+            "%s BHID tidak kosong" % table)
+    if not col.BHID.is_unique:
+        # Duplicate index labels cannot be used for reliable depth reconciliation.
+        continue
+
+    for table, columns in (("collar", ["XCOLLAR", "YCOLLAR", "ZCOLLAR", "TD"]),
+                           ("survey", ["AT", "AZ", "DIP"]),
+                           ("assay", ["FROM", "TO"]), ("litho", ["FROM", "TO"])):
+        chk(np.isfinite(required[table][0][columns].to_numpy()).all(),
+            "%s geometri numerik finite tanpa nilai kosong" % table)
+    chk((col.TD > 0).all(), "TD collar positif")
+    chk((sur.AT >= 0).all(), "survey AT tidak negatif")
+    chk(not sur.duplicated(["BHID", "AT"]).any(), "stasiun survey BHID/AT unik")
+
     # --- geometri interval
     chk((asy.TO > asy.FROM).all(), "assay FROM < TO di semua baris")
     chk((lit.TO > lit.FROM).all(), "litho FROM < TO di semua baris")
     chk((asy.FROM >= -1e-9).all(), "tidak ada assay FROM negatif")
+    chk((lit.FROM >= -1e-9).all(), "tidak ada litho FROM negatif")
+    litho_overlap = 0
+    for _, intervals in lit.sort_values(["BHID", "FROM"]).groupby("BHID"):
+        ends = intervals.TO.to_numpy()
+        starts = intervals.FROM.to_numpy()
+        litho_overlap += int((starts[1:] < np.maximum.accumulate(ends)[:-1] - 1e-6).sum())
+    chk(litho_overlap == 0, "tidak ada interval litho bertumpang tindih (overlap=%d)" % litho_overlap)
 
     ov = 0
     gp = 0
@@ -67,6 +107,8 @@ for folder, gcol, unit in SETS:
     td = col.set_index("BHID").TD
     over = (mx - td.reindex(mx.index)).max()
     chk(over <= 0.051, "assay tidak melewati TD collar (maks lebih %.2f m)" % over)
+    lmx = lit.groupby("BHID").TO.max()
+    chk((lmx - td.reindex(lmx.index)).max() <= 0.051, "litho tidak melewati TD collar")
     smx = sur.groupby("BHID").AT.max()
     chk((smx - td.reindex(smx.index)).max() <= 0.051, "survey AT tidak melewati TD")
 
@@ -74,6 +116,11 @@ for folder, gcol, unit in SETS:
     chk(sur.DIP.between(0, 90).all(), "dip survey 0-90 (konvensi positif ke bawah)")
 
     # --- kewajaran kadar
+    for grade_column in DATASETS[folder]["grade_units"]:
+        values = asy[grade_column].dropna()
+        chk(np.isfinite(values.to_numpy()).all(), "%s nilai terisi finite" % grade_column)
+        chk((values >= 0).all(), "%s tidak negatif" % grade_column)
+    # Blank grades are deliberately permitted by the teaching-data contract.
     g = asy[gcol].dropna()
     chk((g >= 0).all(), "tidak ada kadar negatif")
     print("        %s: n=%d mean=%.4f median=%.4f max=%.3f CV=%.2f  [%s]"

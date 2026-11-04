@@ -5,7 +5,8 @@ Blok FIKTIF "Lamonto". Semua angka dihasilkan model, bukan data nyata.
 
 Karakter yang sengaja dibangun:
   - profil berlapis mendatar: tudung besi - limonit - saprolit - bedrock
-  - bor vertikal pada grid teratur (100 m regional + sisipan 50 m)
+  - bor vertikal pada prospek berarah jurus dan berbatas tidak beraturan
+    (100 m regional + sisipan 50 m mengikuti bagian tengah prospek)
   - ketebalan laterit dikontrol kemiringan lereng (tebal di punggungan landai,
     tipis di lereng curam) dan permukaan bedrock yang bergelombang
   - Ni memuncak di saprolit atas; Fe dan MgO berkorelasi negatif kuat
@@ -19,6 +20,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import SmoothNoise
+from nickel_layout import drill_nodes, place_collar
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                    "..", "02-nikel-laterit")
@@ -82,21 +84,17 @@ RELSD = dict(NI=0.13, CO=0.22, FE=0.07, MGO=0.11, SIO2=0.08,
 
 rows_col, rows_sur, rows_asy, rows_lit = [], [], [], []
 
-# --- grid bor: regional 100 m + sisipan 50 m di blok tengah
-nodes = set()
-for gx in np.arange(50.0, EX, 100.0):
-    for gy in np.arange(50.0, EY, 100.0):
-        nodes.add((round(gx, 1), round(gy, 1)))
-for gx in np.arange(700.0, 1101.0, 50.0):
-    for gy in np.arange(600.0, 1001.0, 50.0):
-        nodes.add((round(gx, 1), round(gy, 1)))
-nodes = sorted(nodes, key=lambda p: (p[1], p[0]))
+# Sampling footprint is a conceptual ultramafic ridge programme; it is not an ore shell.
+nodes = drill_nodes()
+site_rng = np.random.default_rng(SEED + 17)
+placed = []
 
 for i, (gx, gy) in enumerate(nodes, start=1):
     bhid = "LMT-%04d" % i
-    # posisi lapangan meleset sedikit dari titik grid rencana
-    x = gx + rng.normal(0, 1.6)
-    y = gy + rng.normal(0, 1.6)
+    # Pad placement follows synthetic terrain/access near the planned target.
+    x, y = place_collar((gx, gy), site_rng,
+        lambda sx, sy: slope_pct(np.array([sx]), np.array([sy]))[0], placed)
+    placed.append((x, y))
     xa, ya = np.array([x]), np.array([y])
     z = float(topo(xa, ya)[0])
     t_ovb, t_lim, t_sap, dev = [float(v[0]) for v in profile(xa, ya)]
