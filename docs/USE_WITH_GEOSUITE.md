@@ -18,7 +18,7 @@
 | Folder | Lubang/collar | Baris assay | Kadar utama | CRS sintetis |
 | --- | ---: | ---: | --- | --- |
 | `01-emas-epitermal` | 103 | 11.526 | `AU_GPT`: g/t; `AG_GPT`: g/t | EPSG:32748 |
-| `02-nikel-laterit` | 350 | 8.278 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
+| `02-nikel-laterit` | 350 | 8.896 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
 | `03-timah-placer` | 500 | 5.990 | `SN_KGM3`: kg/m³ | EPSG:32748 |
 
 Semua data **sintetis**, bukan hasil eksplorasi di lokasi nyata. CRS menjelaskan
@@ -86,3 +86,9 @@ CRS and units. This proves the files match that manifest; it does not validate
 geology or authenticate a download without a trusted source/checksum. CI keeps
 a snapshot artifact for each successful check. Published releases, when
 available, are separate from CI artifacts; the source ZIP remains usable.
+
+## Nickel revision1.1.0
+
+The synthetic collar programme now follows an irregular strike-oriented prospect, with selective infill. This is a sampling footprint, not a geological resource shell. Current counts and sampled statistics are in `02-nikel-laterit/STATISTICS.json`. The built-in app sample changes only when a matching GeoSuite build is published. Keep blank grades as missing, retain measured SG through the handoffs, and estimate LIM/SAP separately when that is your justified geological interpretation. [Core exercises](../exercises/README.md) deliberately omit surveys/collars/geology, mismatch identifiers or introduce an overlapping assay; fix and revalidate before exporting.
+
+Current GeoSuite Core builds use the documented missing-collar-and-geology case by default (349 collars). Validation → Download source CSVs → ordinary Import restores the complete 350-hole synthetic sources. Assay/Resource default examples are prepared from the complete main CSVs. Older published builds may differ; check the build and sample counts.
