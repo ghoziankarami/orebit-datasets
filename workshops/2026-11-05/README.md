@@ -32,3 +32,9 @@ To run it in Colab, choose **Runtime → Run all**. The first cell asks for the
 participant package ZIP (`Paket_Peserta_Workshop_ATI.zip`) distributed to
 workshop participants; the notebook extracts it and reads the CSV files and
 reference outputs from it.
+
+## Historical workshop inputs
+
+[V4 chemistry and geometry](v4/dataset/) and its [provenance](v4/output/dataset-provenance.md) remain available for reproducing the mineral-component budget. V2/V3 archives retain their original bytes; do not mix workshop CSVs with the baseline dataset folders. The built-in GeoSuite sample and the 340-hole workshop are different populations. Since GeoSuite v3.2.4 the built-in sample starts valid; the intentionally faulty practice sample is a separate Validation action.
+
+V5 ZIP is preserved byte-for-byte from reviewed main (QA/QC correction). Expanded v5 files and the generator follow that corrected archive; blank controls are Not assessed without laboratory DL/LOR. SG is not measured dry bulk density.

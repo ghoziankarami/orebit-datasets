@@ -1,0 +1,58 @@
+{
+  "purpose": "Synthetic analytical Surface/Loft geometry exercise; Ni-only, not a multielement genesis model.",
+  "crs": "EPSG:32748",
+  "dip": "positive down",
+  "collars": 36,
+  "survey_stations": 72,
+  "assay_rows": 108,
+  "sap_solid_m3": 60000,
+  "sap_thickness_m": 6,
+  "independent_coordinates": "X/Y equal collar; Z=100-measured depth for these vertical traces.",
+  "loft_world_sections": [
+    {
+      "northing": 9800000,
+      "ring": [
+        [
+          700000,
+          96
+        ],
+        [
+          700100,
+          91
+        ],
+        [
+          700100,
+          85
+        ],
+        [
+          700000,
+          90
+        ]
+      ]
+    },
+    {
+      "northing": 9800100,
+      "ring": [
+        [
+          700000,
+          93.5
+        ],
+        [
+          700100,
+          88.5
+        ],
+        [
+          700100,
+          82.5
+        ],
+        [
+          700000,
+          87.5
+        ]
+      ]
+    }
+  ],
+  "density": "No measured density supplied; any Resource density is a separately recorded training assumption.",
+  "boundary_note": "Twenty hull holes lie on lateral boundaries. Inspect measured membership and the explicit boundary policy; never assume all36holes are strict interior samples.",
+  "limits": "60000m3 proves geometry only; model support, estimated mass and confidence require separate checks."
+}

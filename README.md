@@ -17,6 +17,20 @@ and commercial software. Just credit Orebit.id.
 Reading or importing the CSVs needs no Python installation. Python and the
 pinned dependencies are only needed for generators and validation.
 
+## ATI workshop scenarios
+
+[Workshop v5 ZIP](workshops/2026-11-05/GeoSuite_Workshop_Nickel_v5.zip) ·
+[Scenario guide](workshops/2026-11-05/v5/README.txt) ·
+[SHA-256](workshops/2026-11-05/GeoSuite_Workshop_Nickel_v5.zip.sha256)
+
+The workshop is separate from the three baseline datasets below. Its full
+nickel example has340collars and8,751assays, with unchanged v4 chemistry.
+Choose a new project for each exercise: source validation/repair, curved survey,
+analytical Surface/Loft geometry or the full nickel workflow. QA/QC controls
+are separate from resource samples. Source repair answers and numerical
+references live under `output/` and are never extra estimation inputs.
+V5 adds teaching scenarios; it does not certify an application or resource model.
+
 ## The three datasets
 
 | | `01-emas-epitermal` | `02-nikel-laterit` | `03-timah-placer` |

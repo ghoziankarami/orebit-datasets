@@ -200,10 +200,10 @@ for c in ("FROM", "TO"):
     lit[c] = lit[c].round(2)
 
 os.makedirs(OUT, exist_ok=True)
-col.to_csv(os.path.join(OUT, "collar.csv"), index=False)
-sur.to_csv(os.path.join(OUT, "survey.csv"), index=False)
-asy.to_csv(os.path.join(OUT, "assay.csv"), index=False)
-lit.to_csv(os.path.join(OUT, "litho.csv"), index=False)
+col.to_csv(os.path.join(OUT, "collar.csv"), index=False, lineterminator="\n")
+sur.to_csv(os.path.join(OUT, "survey.csv"), index=False, lineterminator="\n")
+asy.to_csv(os.path.join(OUT, "assay.csv"), index=False, lineterminator="\n")
+lit.to_csv(os.path.join(OUT, "litho.csv"), index=False, lineterminator="\n")
 
 m = asy.merge(lit, on="BHID")
 m = m[(m.FROM_x >= m.FROM_y) & (m.TO_x <= m.TO_y)]
