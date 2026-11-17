@@ -1,17 +1,40 @@
-# Workshop GeoSuite Nickel — 4–5 November 2026
+# GeoSuite Nickel Workshop dataset, 5th revision
 
-Mulai dengan [paket peserta v3](GeoSuite_Workshop_Nickel_v3.zip?raw=true), ekstrak, lalu baca **README.txt**. Isi paling atas hanya README.txt, dataset/ dan output/. Empat CSV pada dataset/ adalah input awal Core; output/ adalah referensi, bukan file yang diunggah bersama input.
+Participant archive: [`GeoSuite_Workshop_Nickel_v5.zip`](GeoSuite_Workshop_Nickel_v5.zip)
+SHA-256: `a5b7b867f607f2c55c8f90f80b787e26ab5e4fe0bb9f407207c218f8fb25cd31`
+License: CC BY 4.0; all training data are synthetic.
 
-[Baca materi Python tanpa kode](notebook/GeoSuite_Workshop_Nickel_Baca.md) · [Latihan survey melengkung dan QA/QC](exercises/README.md). Masing-masing notebook sekarang memakai14sel pendek dan12figur kalkulasi aktual; implementasi terbuka berada pada companion engine.
+The four baseline collar, survey, assay and lithology CSV files are unchanged
+from v4. The additional exercise archive provides validation-repair examples,
+a curved-survey minimum-curvature exercise, a small Domain known-answer case,
+and separate synthetic QA/QC controls.
 
-**Jalur utama:** peserta mengimpor sendiri empat CSV workshop, mengikuti demonstrasi dan PPT. **Jalur pendamping:** [baca notebook Python beserta hasilnya di GitHub](notebook/GeoSuite_Workshop_Nickel.ipynb); jalankan melalui Jupyter atau Colab dengan dependensi yang disebutkan notebook. GitHub menampilkan notebook, bukan menjalankan kernel. Notebook menggunakan raw data yang sama; geometri interpretasi dan clipped block support diberikan sebagai input yang dinyatakan jelas, bukan validasi geologi independen.
+The QA/QC instructions and independent reference were corrected: CRM results
+produce the teaching z-scores 0, 2 and 5; blank values remain **Not assessed**
+because this dataset has no laboratory-reported DL/LOR; and one duplicate pair
+exceeds the exercise HARD threshold. The observed minimum assay value is not a
+substitute DL/LOR. Do not include control rows in Resource estimation.
 
-Paket ini adalah subset340lubang utuh dari data sintetis6b93ac48/02-nikel-laterit:340collar,680survey,8751assay,1344lithology. Nilai pengukuran identik dengan paketv1. Sepuluh lubang tanpa logged SAP base lengkap dikeluarkan tanpa pemilihan kadar. Missing tetap missing. Data bukan endapan nyata. CC BY4.0, kredit Ghozian Karami/Orebit.id.
+The public archive is pinned by commit in the participant QR. No field data,
+laboratory certificate, geological sign-off, or Mineral Resource classification
+is implied.
 
-Tombol Sample bawaan Core berbeda: ia adalah latihan validasi dengan tiga masalah linkage yang disengaja. Gunakan empat CSV workshop untuk alur pelatihan; jangan mencampur jumlah/hasil sample bawaan dan paket340ini. Surface-pair dan loft memakai footprint berbeda; bukan perbandingan tonase langsung.38boundaryholes/468m pada pair tetap unassigned secara eksplisit; raw340lubang dipertahankan.
+## Workshop notebook
 
-[Paketv1 terdahulu](https://github.com/ghoziankarami/orebit-datasets/blob/46c2958657d7bd437ed90df7f48114e91bb3a5ed/workshops/2026-11-05/participant-training-package.zip) tetap utuh untuk mereproduksi bukti lama. Paket dataset/notebook bukan rilis aplikasi, sign-off profesional, acceptance39layar atau approval production. Akses aplikasi/versi dikonfirmasi instruktur secara terpisah.
+[`GeoSuite_Workshop_Nickel.ipynb`](GeoSuite_Workshop_Nickel.ipynb) repeats the
+GeoSuite Surface-pair and Loft workflow in Python and checks each result
+against the application. Outputs are saved in the file, so it can be read
+without running it.
 
-Revisiv2.1 menambah kontrak dan hasil UIE7 untuk hash seluruh solid, variogram directional, model/search, seluruh gradeblokFloat32, LOOdan seluruh cutoff. Empat CSV pengukuran tidak berubah. Versi tepat harus tetap dicatat ketika mereview UI.
+[Open in Google Colab](https://colab.research.google.com/github/ghoziankarami/orebit-datasets/blob/main/workshops/2026-11-05/GeoSuite_Workshop_Nickel.ipynb)
 
-Revisiv3 mempertahankan empatCSVutama dan seluruh hasil baselinev2.1; menambah latihan terpisah3lubang/12station Minimum Curvature dan SIMNI/blank/duplicate sintetis. Folder input tidak berisi expectedCSV; oracle dan metadata ditempatkan terpisah. Paket juga mengungkap10flag jumlah parsial analit>100% dan34missing perunsur: raw tidak dinormalisasi. Ini contoh QA/interpretasi, bukan dataset lab atau MineralResource yang telah diterima.
+To run it in Colab, choose **Runtime → Run all**. The first cell asks for the
+participant package ZIP (`Paket_Peserta_Workshop_ATI.zip`) distributed to
+workshop participants; the notebook extracts it and reads the CSV files and
+reference outputs from it.
+
+## Historical workshop inputs
+
+[V4 chemistry and geometry](v4/dataset/) and its [provenance](v4/output/dataset-provenance.md) remain available for reproducing the mineral-component budget. V2/V3 archives retain their original bytes; do not mix workshop CSVs with the baseline dataset folders. The built-in GeoSuite sample and the 340-hole workshop are different populations. Since GeoSuite v3.2.4 the built-in sample starts valid; the intentionally faulty practice sample is a separate Validation action.
+
+V5 ZIP is preserved byte-for-byte from reviewed main (QA/QC correction). Expanded v5 files and the generator follow that corrected archive; blank controls are Not assessed without laboratory DL/LOR. SG is not measured dry bulk density.

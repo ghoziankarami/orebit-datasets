@@ -1,7 +1,7 @@
 {
   "version": 5,
   "base_data_commit": "c4c65e5",
-  "scope": "Unchanged v4 data plus discoverable source-repair and analytical geometry exercises.",
+  "scope": "Unchanged synthetic v4 main data; v5 validation, curved-survey and Domain exercises; QA/QC corrected so blanks remain not assessed without laboratory DL/LOR.",
   "files": {
     "LICENSE.txt": "05239c93d1365318dfa95c083c1a95dc965278bd574322dfa752e9fba9e674c0",
     "README.txt": "3f1cd05f69db151efdb63d73790b24a4c8d8358b47a3d5d3ac921eed954b1050",
@@ -17,7 +17,7 @@
     "dataset/exercises/domain-known-answer/collar.csv": "9daad6d019af4e5946a06c8d8e175b24a0bab56ea6786060a7f95288e1237287",
     "dataset/exercises/domain-known-answer/litho.csv": "eb3b9a274bfa173b2789548a3f1b458c8e1e5e4c2e6ca64142972a2725fbd901",
     "dataset/exercises/domain-known-answer/survey.csv": "e538e14677a83498635309bf76a4be3e221d3d2c217b77ef0b0f09e178c22e6d",
-    "dataset/exercises/qaqc-synthetic/README.txt": "a6405fe5de9ca7d4d13f959b8641b80a50f09baf2c4de4103340de2213e1af34",
+    "dataset/exercises/qaqc-synthetic/README.txt": "68ca85fd53f8799edc1195fe5ee9e0c03f676d73ca33069119f328f8e2439353",
     "dataset/exercises/qaqc-synthetic/qaqc-ni.csv": "f0893c42aa89d78d1e1eb8fa89a0ccf943876ed9793064cde00dcc593538f99e",
     "dataset/exercises/validation/input/assay.csv": "1b8c319a4c436016b53f9b821a417141aa24a88833568a35ef108aef921eed84",
     "dataset/exercises/validation/input/collar.csv": "b55fdc4e706ad5d90067a058cfdbdf6cfbd22020d48dd4106c56d530b7b8696c",
@@ -28,8 +28,8 @@
     "output/data-dictionary.md": "cdb614015fc39faa71e4d3a7cb4142fead659c2dfc598efc50e0df713da77857",
     "output/dataset-provenance.md": "cb02af6e189f5fb58566139ced585b53ca1abe81951ebb48fcf7b072935e191e",
     "output/exercises/domain-known-answer.json": "0f0a55676a68ab4d549b87628bbc99bd292f088304cbf2723cbce357f52f4b41",
-    "output/exercises/exercise_reference.py": "e8e3f1248a58096395a2900455ed5147a64259b35b950d2c007ffe48df6f1868",
-    "output/exercises/reference-results/qaqc-mock-certificate-and-expected.json": "91faa3efb69e00341fdb416176caf2e4c688d36f69a2e193e6eb7a6f51786701",
+    "output/exercises/exercise_reference.py": "06167beb8873f8e61e1f022b30be0d8ba96c7b358d36919a4e5f28568b7dada4",
+    "output/exercises/reference-results/qaqc-mock-certificate-and-expected.json": "7947054c19a31bb2b14450408c5bcbea5020768123eb343264b49e8f06a4c432",
     "output/exercises/reference-results/survey-expected-coordinates.csv": "b93ec525b043420e5bb0e7b5e4e92f044242db8e7367581108b34a0c75f4c8ea",
     "output/exercises/validation-answer/answer-key.json": "d43cb74a1e8bbb5eafc2ac255c64423a2fe73608aa974314311d625875122ab2",
     "output/exercises/validation-answer/assay.csv": "d8ada3ff014338ea2fea70c4e78f3804dfd7e5f1acff29fac7010b37c74913cc",

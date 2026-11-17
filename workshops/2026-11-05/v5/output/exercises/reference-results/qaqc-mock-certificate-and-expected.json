@@ -5,8 +5,8 @@
   "unit": "Ni elemental mass percent",
   "mean": 1.0,
   "sd": 0.04,
-  "declared_teaching_DL": 0.01,
-  "UI_DL_behavior": "smallest positive observed value proxy; coincides with .01 here by construction, not a laboratory DL import",
+  "lab_reported_DL_or_LOR": null,
+  "blank_assessment": "not_assessed_without_lab_reported_DL_or_LOR",
   "crm_z": [
     0,
     2,
@@ -15,13 +15,11 @@
   "crm_failure_indices": [
     2
   ],
-  "blank_ratios": [
-    1,
-    8
+  "blank_values_ni_pct": [
+    0.01,
+    0.08
   ],
-  "blank_flag_indices": [
-    1
-  ],
+  "blank_flag_indices": [],
   "hard_percent": [
     2.439024390243905,
     27.27272727272727,

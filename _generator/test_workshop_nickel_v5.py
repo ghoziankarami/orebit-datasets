@@ -1,5 +1,6 @@
 """Verify the new teaching scopes without using an application calculation."""
 import csv
+from fractions import Fraction
 import hashlib
 import io
 import json
@@ -45,7 +46,11 @@ assert len(sap) == 36 and all(float(r['TO']) - float(r['FROM']) == 6 for r in sa
 oracle = json.loads((OUT / 'output/exercises/domain-known-answer.json').read_text())
 assert oracle['sap_solid_m3'] == 100 * 100 * 6 == 60000
 assert all(float(row['DIP']) == 90 and float(row['AZ']) == 0 for row in read('survey'))
-assert sum(1 + i/10 + j/50 for i in range(6) for j in range(6)) / 36 == 1.3
+assert sum(Fraction(1) + Fraction(i, 10) + Fraction(j, 50) for i in range(6) for j in range(6)) / 36 == Fraction(13, 10)
+qaqc = json.loads((OUT / 'output/exercises/reference-results/qaqc-mock-certificate-and-expected.json').read_text())
+assert qaqc['lab_reported_DL_or_LOR'] is None
+assert qaqc['blank_assessment'] == 'not_assessed_without_lab_reported_DL_or_LOR'
+assert qaqc['blank_flag_indices'] == [] and qaqc['crm_z'] == [0, 2, 5]
 archive = BASE / 'GeoSuite_Workshop_Nickel_v5.zip'
 with zipfile.ZipFile(archive) as source:
     assert source.testzip() is None
