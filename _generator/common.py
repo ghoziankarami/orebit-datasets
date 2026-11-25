@@ -143,3 +143,87 @@ def fmt(df, cols_round):
         if c in df.columns:
             df[c] = df[c].round(nd)
     return df
+
+
+def write_surface_dxf(path, xs, ys, grid_z, layer="TOPOGRAPHY", crs=None, vertical_datum=None):
+    """Tulis permukaan grid (len(xs), len(ys)) sebagai segitiga 3DFACE DXF R12 ASCII murni.
+
+    Hanya memakai pustaka standar Python + NumPy (tanpa ezdxf) dan dapat dibaca
+    langsung oleh ezdxf, Surpac, Datamine, Micromine, Leapfrog, maupun PitOpt.
+    """
+    xs = np.asarray(xs, dtype=float)
+    ys = np.asarray(ys, dtype=float)
+    grid_z = np.asarray(grid_z, dtype=float)
+    if grid_z.shape != (xs.size, ys.size):
+        raise ValueError(f"grid_z shape {grid_z.shape} != ({xs.size}, {ys.size})")
+
+    finite = np.isfinite(grid_z)
+    zmin = float(np.min(grid_z[finite])) if finite.any() else 0.0
+    zmax = float(np.max(grid_z[finite])) if finite.any() else 0.0
+
+    comment_parts = ["Orebit Synthetic Topography Surface"]
+    if crs:
+        comment_parts.append(f"CRS: {crs}")
+    if vertical_datum:
+        comment_parts.append(f"VERTICAL_DATUM: {vertical_datum}")
+
+    lines = [
+        "  999",
+        " | ".join(comment_parts),
+        "  0", "SECTION",
+        "  2", "HEADER",
+        "  9", "$ACADVER", "  1", "AC1009",
+        "  9", "$INSUNITS", " 70", "6",
+        "  9", "$EXTMIN", " 10", f"{xs.min():.3f}", " 20", f"{ys.min():.3f}", " 30", f"{zmin:.3f}",
+        "  9", "$EXTMAX", " 10", f"{xs.max():.3f}", " 20", f"{ys.max():.3f}", " 30", f"{zmax:.3f}",
+        "  0", "ENDSEC",
+        "  0", "SECTION",
+        "  2", "ENTITIES",
+    ]
+
+    faces = 0
+    for i in range(xs.size - 1):
+        x0, x1 = xs[i], xs[i + 1]
+        for j in range(ys.size - 1):
+            y0, y1 = ys[j], ys[j + 1]
+            z00, z10, z11, z01 = grid_z[i, j], grid_z[i + 1, j], grid_z[i + 1, j + 1], grid_z[i, j + 1]
+            if not (np.isfinite(z00) and np.isfinite(z10) and np.isfinite(z11) and np.isfinite(z01)):
+                continue
+            for p0, p1, p2 in (
+                ((x0, y0, z00), (x1, y0, z10), (x1, y1, z11)),
+                ((x0, y0, z00), (x1, y1, z11), (x0, y1, z01)),
+            ):
+                lines.extend([
+                    "  0", "3DFACE",
+                    "  8", str(layer),
+                    " 10", f"{p0[0]:.3f}", " 20", f"{p0[1]:.3f}", " 30", f"{p0[2]:.3f}",
+                    " 11", f"{p1[0]:.3f}", " 21", f"{p1[1]:.3f}", " 31", f"{p1[2]:.3f}",
+                    " 12", f"{p2[0]:.3f}", " 22", f"{p2[1]:.3f}", " 32", f"{p2[2]:.3f}",
+                    " 13", f"{p2[0]:.3f}", " 23", f"{p2[1]:.3f}", " 33", f"{p2[2]:.3f}",
+                ])
+                faces += 1
+
+    lines.extend(["  0", "ENDSEC", "  0", "EOF", ""])
+    with open(path, "w", encoding="ascii", newline="\n") as fh:
+        fh.write("\n".join(lines))
+    return faces
+
+
+def write_surface_csv(path, xs, ys, grid_z, crs=None, vertical_datum=None):
+    """Tulis grid permukaan ke CSV X,Y,Z dengan header komentar CRS opsional."""
+    xs = np.asarray(xs, dtype=float)
+    ys = np.asarray(ys, dtype=float)
+    grid_z = np.asarray(grid_z, dtype=float)
+    mx, my = np.meshgrid(xs, ys, indexing="ij")
+    mask = np.isfinite(grid_z)
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        if crs or vertical_datum:
+            meta = []
+            if crs:
+                meta.append(f"CRS: {crs}")
+            if vertical_datum:
+                meta.append(f"VERTICAL_DATUM: {vertical_datum}")
+            fh.write("# " + " | ".join(meta) + "\n")
+        fh.write("X,Y,Z\n")
+        for x, y, z in zip(mx[mask], my[mask], grid_z[mask]):
+            fh.write(f"{x:.3f},{y:.3f},{z:.3f}\n")
