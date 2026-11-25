@@ -66,7 +66,10 @@ for folder, expected_rows, dims, crs, domains, grades in SETS:
         "CSV topografi memiliki X,Y,Z finite")
 
     xs, ys = np.sort(topo.X.unique()), np.sort(topo.Y.unique())
-    chk(len(topo) == len(xs) * len(ys) and np.allclose(np.diff(xs), np.diff(xs)[0])
+    xy_pairs = set(zip(topo.X, topo.Y))
+    expected_xy = {(x, y) for x in xs for y in ys}
+    chk(len(xy_pairs) == len(topo) and xy_pairs == expected_xy
+        and np.allclose(np.diff(xs), np.diff(xs)[0])
         and np.allclose(np.diff(ys), np.diff(ys)[0]),
         "titik topografi membentuk grid reguler lengkap")
     dxf_pairs, faces = dxf_faces(os.path.join(path, "surface_topo.dxf"))
@@ -75,9 +78,10 @@ for folder, expected_rows, dims, crs, domains, grades in SETS:
     chk(all(layer == "TOPOGRAPHY" for layer, _ in faces), "semua face berada di layer TOPOGRAPHY")
     csv_points = set(map(tuple, topo[["X", "Y", "Z"]].to_numpy()))
     dxf_points = {point for _, vertices in faces for point in vertices[:3]}
-    chk(dxf_points <= csv_points, "titik sudut DXF cocok persis dengan surface_topo.csv")
-    chk(any(code == "9" and value == "$INSUNITS" for code, value in dxf_pairs),
-        "DXF menyatakan unit gambar")
+    chk(dxf_points == csv_points, "titik sudut DXF cocok persis dengan surface_topo.csv")
+    chk(any(dxf_pairs[i + 1] == ("70", "6")
+            for i, pair in enumerate(dxf_pairs[:-1]) if pair == ("9", "$INSUNITS")),
+        "DXF menyatakan unit meter (INSUNITS=6)")
 
 print("\n" + "=" * 68 + "\nPEMERIKSAAN GAGAL:", fail, "\n" + "=" * 68)
 raise SystemExit(1 if fail else 0)
