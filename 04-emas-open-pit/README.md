@@ -37,6 +37,28 @@ R12 `3DFACE` triangles on layer `TOPOGRAPHY`; every grid cell is split into two
 triangles. The DXF header also records drawing units as metres. Both surface
 files cover beyond the block-model footprint to support surface interpolation.
 
+### Spatially coherent drillholes (plain CSV headers)
+
+Four plain-header drillhole tables (`collar.csv`, `survey.csv`, `assay.csv`,
+`litho.csv`, with **no** `#` comment lines) are co-located with the topography
+and 3D block model for cross-app workflows across **GeoSuite**, **Orebit
+Desktop**, and **PitOpt** (see [Use with Orebit Apps](../docs/USE_WITH_OREBIT_APPS.md)):
+
+- **`collar.csv`** (104 angled holes `GK-001`–`GK-104`, `19,160.8 m` total,
+  `TD` `133.3–232.9 m`, median `183.8 m`): 50 m infill in the mineralised corridor
+  plus 100 m flank holes, collared on `surface_topo` (`319.30–432.49 m RL`).
+- **`survey.csv`** (794 stations): 30 m downhole stations plus collar/TD,
+  azimuth ~240° (drilling WSW across the 70° ENE dipping system) and
+  positive-down dip `51.8°–70.0°`.
+- **`assay.csv`** (12,669 intervals: `BHID,FROM,TO,AU_GPT,AG_GPT,SG`): `1.0 m`
+  samples inside the mineralised core/halo and `2.0 m` in barren host rock;
+  mineralised intervals (`AU_GPT >= 0.5 g/t`, `n = 3,118`) have mean `1.80 g/t`,
+  median `1.34 g/t`, max `14.52 g/t` (overall mean `0.494 g/t Au`, `3.84 g/t Ag`,
+  `SG` `1.92–2.86 t/m³`).
+- **`litho.csv`** (412 intervals: `BHID,FROM,TO,LITH,ALT`): contiguous `0..TD`
+  weathering domains (`OXIDE`, `TRANS`, `FRESH`) and alteration (`SIL`, `ARG`,
+  `PROP`).
+
 ## Grade and domain notes
 
 The model assigns gold and silver grades to mineralised core, lower-grade halo,

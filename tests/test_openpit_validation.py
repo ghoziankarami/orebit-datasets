@@ -7,7 +7,15 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ("block_model.csv", "surface_topo.csv", "surface_topo.dxf")
+FILES = (
+    "block_model.csv",
+    "surface_topo.csv",
+    "surface_topo.dxf",
+    "collar.csv",
+    "survey.csv",
+    "assay.csv",
+    "litho.csv",
+)
 
 
 class OpenPitValidation(unittest.TestCase):
@@ -21,8 +29,8 @@ class OpenPitValidation(unittest.TestCase):
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(source, dest)
         (self.root / "_generator").mkdir()
-        shutil.copyfile(ROOT / "_generator/validate_openpit.py",
-                        self.root / "_generator/validate_openpit.py")
+        for script in ("validate_openpit.py", "common.py"):
+            shutil.copyfile(ROOT / "_generator" / script, self.root / "_generator" / script)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -58,6 +66,28 @@ class OpenPitValidation(unittest.TestCase):
         path.write_text(path.read_text().replace(" 70\n6\n", " 70\n0\n", 1))
         result = self.run_validator()
         self.assertIn("GAGAL DXF menyatakan unit meter", result.stdout)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+
+    def test_floating_collar_is_rejected(self):
+        path = self.root / "04-emas-open-pit/collar.csv"
+        lines = path.read_text().splitlines()
+        parts = lines[1].split(",")
+        parts[3] = f"{float(parts[3]) + 2.5:.2f}"
+        lines[1] = ",".join(parts)
+        path.write_text("\n".join(lines) + "\n")
+        result = self.run_validator()
+        self.assertIn("GAGAL ZCOLLAR cocok dengan elevasi surface_topo.csv", result.stdout)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+
+    def test_overlapping_assay_intervals_are_rejected(self):
+        path = self.root / "05-nikel-laterit-open-pit/assay.csv"
+        lines = path.read_text().splitlines()
+        parts = lines[2].split(",")
+        parts[1] = "0.5"
+        lines[2] = ",".join(parts)
+        path.write_text("\n".join(lines) + "\n")
+        result = self.run_validator()
+        self.assertIn("GAGAL tidak ada interval assay bertumpang tindih", result.stdout)
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
 
 

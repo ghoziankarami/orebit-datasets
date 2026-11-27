@@ -35,6 +35,26 @@ R12 `3DFACE` triangles on layer `TOPOGRAPHY`; every grid cell is split into two
 triangles. The DXF header also records drawing units as metres. The surface
 extends beyond the block footprint for interpolation at its edges.
 
+### Spatially coherent drillholes (plain CSV headers)
+
+Four plain-header drillhole tables (`collar.csv`, `survey.csv`, `assay.csv`,
+`litho.csv`, with **no** `#` comment lines) are co-located with the topography
+and 3D block model for cross-app workflows across **GeoSuite**, **Orebit
+Desktop**, and **PitOpt** (see [Use with Orebit Apps](../docs/USE_WITH_OREBIT_APPS.md)):
+
+- **`collar.csv`** (155 vertical holes `LM-001`–`LM-155`, `4,313.0 m` total,
+  `TD` `13.0–48.0 m`, median `28.0 m`): 50 m infill over the central enrichment
+  zone plus 100 m regional grid, collared on `surface_topo` (`240.90–394.71 m RL`).
+- **`survey.csv`** (310 stations): collar (`0.0 m`) and `TD` with `AZ = 0.0°`
+  and `DIP = 90.0°` (positive downward).
+- **`assay.csv`** (4,313 `1.0 m` intervals:
+  `BHID,FROM,TO,NI_PCT,CO_PCT,FE_PCT,MGO_PCT,SIO2_PCT,SG`): saprolite (`SAP`,
+  `n = 1,783`) averages `1.42% Ni` (median `1.32%`, max `3.63%`); limonite
+  (`LIM`, `n = 1,175`) averages `1.06% Ni`, `0.121% Co`, `42.2% Fe`; overall
+  `FE_PCT` vs `MGO_PCT` correlation `r = -0.895` (`SG` `1.25–2.80 t/m³`).
+- **`litho.csv`** (611 intervals: `BHID,FROM,TO,LITH`): contiguous `0..TD`
+  laterite profile horizons (`OVB`, `LIM`, `SAP`, `BRK`).
+
 ## Grade and domain notes
 
 Nickel enrichment is concentrated in the saprolite, while iron is higher in

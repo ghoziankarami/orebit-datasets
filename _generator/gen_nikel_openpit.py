@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import SmoothNoise, write_surface_csv, write_surface_dxf
+from common import SmoothNoise, bilinear_surface_z, write_surface_csv, write_surface_dxf
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "05-nikel-laterit-open-pit")
 SEED = 20260830
@@ -194,3 +194,118 @@ print(f"Domains (rock): {below['DOMAIN'].value_counts().to_dict()}")
 print(f"Classes (rock): {below['CLASS'].value_counts().to_dict()}")
 print(f"SAP Ni        : n={len(sap):,}, mean={sap['NI_PCT'].mean():.2f}%, med={sap['NI_PCT'].median():.2f}%, max={sap['NI_PCT'].max():.2f}%, CV={sap['NI_PCT'].std()/sap['NI_PCT'].mean():.2f}")
 print(f"Fe vs MgO r   : {below['FE_PCT'].corr(below['MGO_PCT']):.3f}")
+
+# ------------------------------------------------------------------ 3. drillholes (cross-app)
+# Separate RNG created AFTER block_model.csv so block_model & surfaces remain bit-for-bit identical.
+rng_dh = np.random.default_rng(SEED + 1001)
+
+dh_nodes = set()
+for gx_l in np.arange(400.0, 1401.0, 100.0):
+    for gy_l in np.arange(400.0, 1201.0, 100.0):
+        dh_nodes.add((round(gx_l, 1), round(gy_l, 1)))
+for gx_l in np.arange(700.0, 1101.0, 50.0):
+    for gy_l in np.arange(600.0, 1001.0, 50.0):
+        dh_nodes.add((round(gx_l, 1), round(gy_l, 1)))
+dh_nodes = sorted(dh_nodes, key=lambda p: (p[1], p[0]))
+
+rows_col, rows_sur, rows_asy, rows_lit = [], [], [], []
+for idx_h, (gx_l, gy_l) in enumerate(dh_nodes, start=1):
+    bhid = f"LM-{idx_h:03d}"
+    lx_h = float(gx_l + rng_dh.normal(0.0, 1.5))
+    ly_h = float(gy_l + rng_dh.normal(0.0, 1.5))
+    xa = np.array([lx_h])
+    ya = np.array([ly_h])
+    zc_h = float(np.round(bilinear_surface_z(tx, ty, gz_t, X0 + lx_h, Y0 + ly_h), 2))
+    t_o, t_l, t_s = [float(v[0]) for v in profile(xa, ya)]
+    b_o = t_o
+    b_l = b_o + t_l
+    b_s = b_l + t_s
+
+    into_brk = rng_dh.uniform(6.5, 8.5)
+    td_h = float(np.clip(np.round(b_s + into_brk, 0), np.ceil(b_s + 6.0), np.floor(b_s + 9.0)))
+
+    rows_col.append((bhid, X0 + lx_h, Y0 + ly_h, zc_h, td_h))
+    rows_sur.append((bhid, 0.0, 0.0, 90.0))
+    rows_sur.append((bhid, td_h, 0.0, 90.0))
+
+    edges = np.arange(0.0, td_h + 1e-6, 1.0)
+    f_arr = edges[:-1]
+    t_arr = edges[1:]
+    mid = 0.5 * (f_arr + t_arr)
+
+    unit_h = np.where(
+        mid < b_o, "OVB",
+        np.where(mid < b_l, "LIM", np.where(mid < b_s, "SAP", "BRK")),
+    )
+    rel_h = np.zeros_like(mid)
+    rel_h = np.where(unit_h == "OVB", mid / max(b_o, 1e-6), rel_h)
+    rel_h = np.where(unit_h == "LIM", (mid - b_o) / max(t_l, 1e-6), rel_h)
+    rel_h = np.where(unit_h == "SAP", (mid - b_l) / max(t_s, 1e-6), rel_h)
+    rel_h = np.where(unit_h == "BRK", np.clip((mid - b_s) / 8.0, 0.0, 1.0), rel_h)
+    rel_h = np.clip(rel_h, 0.0, 1.0)
+
+    n3_h = g3(np.full(mid.size, lx_h), np.full(mid.size, ly_h), (zc_h - mid) * ANIS)
+    rich_h = float(rich_n(xa, ya)[0])
+    lobe_h = float(np.exp(-0.5 * (((lx_h - 900.0) / 260.0) ** 2 + ((ly_h - 800.0) / 220.0) ** 2)))
+
+    vals_h = {}
+    for k, elem in enumerate(ELEM):
+        lo_v = np.array([ENDS[u][0][k] for u in unit_h])
+        hi_v = np.array([ENDS[u][1][k] for u in unit_h])
+        base_v = lo_v + (hi_v - lo_v) * rel_h
+        if elem == "NI":
+            factor_v = (0.58 + 0.56 * lobe_h) * (1.0 + 0.12 * rich_h)
+            base_v = np.where(unit_h == "BRK", base_v, base_v * factor_v)
+        noise_v = 1.0 + RELSD[elem] * (0.75 * n3_h + 0.66 * rng_dh.standard_normal(mid.size))
+        vals_h[elem] = np.clip(base_v * noise_v, 0.0, None)
+
+    co_sp = 1.0 + 1.7 * np.exp(-0.5 * ((mid - b_l) / 1.4) ** 2)
+    vals_h["CO"] = vals_h["CO"] * co_sp
+    vals_h["FE"] = np.clip(vals_h["FE"], 3.0, 56.0)
+    vals_h["MGO"] = np.clip(vals_h["MGO"], 0.2, 45.0)
+    vals_h["NI"] = np.clip(vals_h["NI"], 0.05, 4.2)
+    vals_h["SG"] = np.clip(vals_h["SG"], 1.25, 2.80)
+
+    for j in range(mid.size):
+        rows_asy.append((
+            bhid, float(f_arr[j]), float(t_arr[j]),
+            float(vals_h["NI"][j]), float(vals_h["CO"][j]),
+            float(vals_h["FE"][j]), float(vals_h["MGO"][j]),
+            float(vals_h["SIO2"][j]), float(vals_h["SG"][j]),
+        ))
+
+    b_idx = 0
+    for j in range(1, mid.size + 1):
+        end = j == mid.size
+        if end or unit_h[j] != unit_h[b_idx]:
+            rows_lit.append((bhid, float(f_arr[b_idx]), float(t_arr[j - 1]), str(unit_h[b_idx])))
+            b_idx = j
+
+col_df = pd.DataFrame(rows_col, columns=["BHID", "XCOLLAR", "YCOLLAR", "ZCOLLAR", "TD"])
+sur_df = pd.DataFrame(rows_sur, columns=["BHID", "AT", "AZ", "DIP"])
+asy_df = pd.DataFrame(
+    rows_asy,
+    columns=["BHID", "FROM", "TO", "NI_PCT", "CO_PCT", "FE_PCT", "MGO_PCT", "SIO2_PCT", "SG"],
+)
+lit_df = pd.DataFrame(rows_lit, columns=["BHID", "FROM", "TO", "LITH"])
+
+for c, nd in dict(XCOLLAR=2, YCOLLAR=2, ZCOLLAR=2, TD=1).items():
+    col_df[c] = col_df[c].round(nd)
+for c, nd in dict(AT=1, AZ=1, DIP=1).items():
+    sur_df[c] = sur_df[c].round(nd)
+for c, nd in dict(FROM=2, TO=2, NI_PCT=3, CO_PCT=4, FE_PCT=2, MGO_PCT=2, SIO2_PCT=2, SG=2).items():
+    asy_df[c] = asy_df[c].round(nd)
+for c in ("FROM", "TO"):
+    lit_df[c] = lit_df[c].round(2)
+
+col_df.to_csv(os.path.join(OUT, "collar.csv"), index=False)
+sur_df.to_csv(os.path.join(OUT, "survey.csv"), index=False)
+asy_df.to_csv(os.path.join(OUT, "assay.csv"), index=False)
+lit_df.to_csv(os.path.join(OUT, "litho.csv"), index=False)
+
+m_dh = asy_df.merge(lit_df, on="BHID", suffixes=("", "_l"))
+m_dh = m_dh[(m_dh["FROM"] >= m_dh["FROM_l"]) & (m_dh["TO"] <= m_dh["TO_l"])]
+sap_dh = m_dh[m_dh["LITH"] == "SAP"]
+print(f"Drillholes    : {len(col_df)} holes, {col_df['TD'].sum():.1f} m, survey={len(sur_df)}, assay={len(asy_df)}, litho={len(lit_df)}")
+print(f"DH SAP Ni     : n={len(sap_dh)}, mean={sap_dh['NI_PCT'].mean():.2f}%, med={sap_dh['NI_PCT'].median():.2f}%, max={sap_dh['NI_PCT'].max():.2f}%")
+print(f"DH Fe vs MgO r: {asy_df['FE_PCT'].corr(asy_df['MGO_PCT']):.3f}")
