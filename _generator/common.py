@@ -227,3 +227,21 @@ def write_surface_csv(path, xs, ys, grid_z, crs=None, vertical_datum=None):
         fh.write("X,Y,Z\n")
         for x, y, z in zip(mx[mask], my[mask], grid_z[mask]):
             fh.write(f"{x:.3f},{y:.3f},{z:.3f}\n")
+
+
+def bilinear_surface_z(grid_xs, grid_ys, grid_z, xq, yq):
+    """Interpolasi bilinear elevasi Z pada grid reguler (grid_xs, grid_ys, grid_z)."""
+    grid_xs = np.asarray(grid_xs, dtype=float)
+    grid_ys = np.asarray(grid_ys, dtype=float)
+    grid_z = np.asarray(grid_z, dtype=float)
+    xq_arr = np.asarray(xq, dtype=float)
+    yq_arr = np.asarray(yq, dtype=float)
+    ix = np.clip(np.searchsorted(grid_xs, xq_arr, side="right") - 1, 0, grid_xs.size - 2)
+    iy = np.clip(np.searchsorted(grid_ys, yq_arr, side="right") - 1, 0, grid_ys.size - 2)
+    fx = (xq_arr - grid_xs[ix]) / (grid_xs[ix + 1] - grid_xs[ix])
+    fy = (yq_arr - grid_ys[iy]) / (grid_ys[iy + 1] - grid_ys[iy])
+    vals = (
+        (grid_z[ix, iy] * (1.0 - fx) + grid_z[ix + 1, iy] * fx) * (1.0 - fy)
+        + (grid_z[ix, iy + 1] * (1.0 - fx) + grid_z[ix + 1, iy + 1] * fx) * fy
+    )
+    return float(vals) if np.ndim(xq) == 0 and np.ndim(yq) == 0 else vals

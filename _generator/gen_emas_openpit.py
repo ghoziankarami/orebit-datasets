@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import D2R, SmoothNoise, write_surface_csv, write_surface_dxf
+from common import D2R, SmoothNoise, bilinear_surface_z, desurvey, write_surface_csv, write_surface_dxf
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "04-emas-open-pit")
 SEED = 20261125
@@ -196,3 +196,197 @@ print(f"Domains (rock): {below['DOMAIN'].value_counts().to_dict()}")
 print(f"Classes (rock): {below['CLASS'].value_counts().to_dict()}")
 print(f"Au>=0.5 g/t   : n={len(ore_zone):,}, mean={ore_zone['AU_GPT'].mean():.2f}, med={ore_zone['AU_GPT'].median():.2f}, max={ore_zone['AU_GPT'].max():.2f}, CV={ore_zone['AU_GPT'].std()/ore_zone['AU_GPT'].mean():.2f}")
 print(f"All rock Au   : mean={below['AU_GPT'].mean():.3f}, P90={below['AU_GPT'].quantile(0.9):.3f}, P99={below['AU_GPT'].quantile(0.99):.3f}")
+
+# ------------------------------------------------------------------ 3. drillholes (cross-app)
+# Separate RNG created AFTER block_model.csv so block_model & surfaces remain bit-for-bit identical.
+rng_dh = np.random.default_rng(SEED + 1001)
+
+
+def eval_emas_field(px, py, pz, field_rng):
+    """Evaluate Gunung Kencana geological domains and grades at XYZ points."""
+    zt_p = topo(px, py)
+    depth_p = np.maximum(0.0, zt_p - pz)
+    d_ox_p, d_tr_p = weathering_depths(px, py)
+    dom_p = np.where(depth_p <= d_ox_p, "OXIDE", np.where(depth_p <= d_tr_p, "TRANS", "FRESH"))
+
+    P_loc = np.column_stack([px, py, pz]) - P0
+    u_p = P_loc @ s_hat
+    v_p = P_loc @ d_hat
+    w_p = P_loc @ n_hat
+
+    sw_p = swell_n(u_p, v_p)
+    half_w_p = 56.0 + 18.0 * sw_p
+    taper_u_p = np.clip(1.0 - np.maximum(0.0, np.abs(u_p) - 165.0) / 85.0, 0.0, 1.0)
+    taper_v_p = np.clip(1.0 - np.maximum(0.0, v_p - 85.0) / 60.0, 0.0, 1.0)
+    env_p = taper_u_p * taper_v_p
+
+    sh1 = 0.85 * np.exp(-0.5 * (((u_p + 75.0) / 95.0) ** 2 + ((v_p + 10.0) / 70.0) ** 2))
+    sh2 = 0.72 * np.exp(-0.5 * (((u_p - 95.0) / 85.0) ** 2 + ((v_p - 25.0) / 65.0) ** 2))
+    sh_p = sh1 + sh2
+
+    zf_p = 0.78 * au_3d(px, py, pz) + 0.62 * field_rng.standard_normal(px.size)
+    zf_p = np.clip(zf_p, -2.8, 3.0)
+
+    core_p = (env_p > 0.15) & (np.abs(w_p) <= half_w_p * np.sqrt(env_p))
+    dout_p = np.maximum(0.0, np.abs(w_p) - half_w_p * np.sqrt(np.maximum(env_p, 1e-6)))
+    halo_p = (~core_p) & (env_p > 0.10) & (dout_p <= 32.0)
+
+    log_au_c = -0.15 + 0.68 * sh_p + 0.55 * np.log(np.maximum(env_p, 0.1)) + 0.78 * zf_p
+    au_c = np.clip(np.exp(log_au_c), 0.05, 15.0)
+    au_h = np.clip(0.55 * env_p * np.exp(-dout_p / 16.0) * np.exp(0.58 * zf_p), 0.01, 4.5)
+    au_b = np.clip(0.018 * np.exp(0.55 * field_rng.standard_normal(px.size)), 0.005, 0.08)
+    au_p = np.clip(np.where(core_p, au_c, np.where(halo_p, au_h, au_b)), 0.005, 15.0)
+
+    ag_r = 7.5 * np.exp(0.28 * ag_3d(px, py, pz) + 0.22 * field_rng.standard_normal(px.size))
+    ag_p = np.where(
+        core_p | halo_p,
+        au_p * ag_r,
+        np.clip(0.12 * np.exp(0.4 * field_rng.standard_normal(px.size)), 0.02, 0.8),
+    )
+    ag_p = np.clip(ag_p, 0.02, 120.0)
+
+    den_n_p = 0.06 * den_3d(px, py, pz) + 0.03 * field_rng.standard_normal(px.size)
+    sg_p = np.select(
+        [dom_p == "OXIDE", dom_p == "TRANS"],
+        [np.clip(2.15 + den_n_p, 1.92, 2.36), np.clip(2.45 + den_n_p, 2.25, 2.62)],
+        default=np.clip(2.68 + den_n_p, 2.52, 2.86),
+    )
+
+    alt_p = np.where(
+        core_p, "SIL",
+        np.where(halo_p | ((env_p > 0.08) & (dout_p <= 45.0)), "ARG", "PROP"),
+    )
+    return dict(
+        domain=dom_p, alt=alt_p, au=au_p, ag=ag_p, sg=sg_p,
+        env=env_p, dout=dout_p,
+    )
+
+
+# 50 m infill in mineralized corridor + 100 m flank grid across footprint
+dh_nodes = set()
+for gx_off in np.arange(200.0, 901.0, 100.0):
+    for gy_off in np.arange(200.0, 901.0, 100.0):
+        dh_nodes.add((round(gx_off, 1), round(gy_off, 1)))
+for gx_off in np.arange(400.0, 701.0, 50.0):
+    for gy_off in np.arange(350.0, 701.0, 50.0):
+        dh_nodes.add((round(gx_off, 1), round(gy_off, 1)))
+dh_nodes = sorted(dh_nodes, key=lambda p: (p[1], p[0]))
+
+rows_col, rows_sur, rows_asy, rows_lit = [], [], [], []
+for idx_h, (gx_off, gy_off) in enumerate(dh_nodes, start=1):
+    bhid = f"GK-{idx_h:03d}"
+    cx_h = float(X0 + gx_off + rng_dh.normal(0.0, 2.5))
+    cy_h = float(Y0 + gy_off + rng_dh.normal(0.0, 2.5))
+    cx_h = float(np.clip(cx_h, X0 + 180.0, X0 + 960.0))
+    cy_h = float(np.clip(cy_h, Y0 + 160.0, Y0 + 960.0))
+    cz_h = float(np.round(bilinear_surface_z(tx, ty, gz_t, cx_h, cy_h), 2))
+
+    az0 = float(240.0 + rng_dh.normal(0.0, 4.0))
+    dip0 = float(np.clip(62.0 + rng_dh.normal(0.0, 3.5), 55.0, 70.0))
+    in_corridor = (380.0 <= (cx_h - X0) <= 720.0) and (330.0 <= (cy_h - Y0) <= 720.0)
+    td_target = rng_dh.uniform(175.0, 235.0) if in_corridor else rng_dh.uniform(130.0, 195.0)
+
+    # Cap TD so hole bottom stays strictly inside [X0..X0+1050, Y0..Y0+1050, Z_MIN_C..Z_MAX_C]
+    max_td_z = (cz_h - (Z_MIN_C + 5.0)) / np.sin(dip0 * D2R)
+    td_h = float(np.round(np.clip(td_target, 120.0, min(240.0, max_td_z)), 1))
+
+    at = np.arange(0.0, td_h, 30.0)
+    if at[-1] < td_h - 1.0:
+        at = np.append(at, td_h)
+    else:
+        at[-1] = td_h
+    az_walk = np.cumsum(rng_dh.normal(0.0, 0.9, at.size)) * np.sqrt(at / 30.0 + 1.0)
+    azs = (az0 + az_walk - az_walk[0]) % 360.0
+    dip_walk = np.cumsum(rng_dh.normal(0.0, 0.25, at.size))
+    dips = np.clip(dip0 - 0.4 * (at / 30.0) + (dip_walk - dip_walk[0]), 48.0, 78.0)
+
+    # Verify trajectory stays inside block model bounds; trim TD if deviation approaches edge
+    probe_d = np.arange(0.0, td_h + 0.1, 2.0)
+    if probe_d[-1] < td_h:
+        probe_d = np.append(probe_d, td_h)
+    probe_p = np.array([cx_h, cy_h, cz_h])[None, :] + desurvey(at, azs, dips, probe_d)
+    inside_bm = (
+        (probe_p[:, 0] >= X0 + 10.0) & (probe_p[:, 0] <= X0 + NX * DX - 10.0)
+        & (probe_p[:, 1] >= Y0 + 10.0) & (probe_p[:, 1] <= Y0 + NY * DY - 10.0)
+        & (probe_p[:, 2] >= Z_MIN_C + 2.0) & (probe_p[:, 2] <= Z_MAX_C)
+    )
+    if not inside_bm.all():
+        first_out = int(np.argmax(~inside_bm))
+        td_h = float(np.round(max(120.0, probe_d[max(first_out - 1, 0)]), 1))
+        at = at[at < td_h - 1.0]
+        at = np.append(at, td_h)
+        azs = azs[:at.size]
+        dips = dips[:at.size]
+
+    rows_col.append((bhid, cx_h, cy_h, cz_h, td_h))
+    for a_val, az_val, d_val in zip(at, azs, dips):
+        rows_sur.append((bhid, float(a_val), float(az_val), float(d_val)))
+
+    # Determine dense 1 m sampling zone along hole where env_strength > 0.08
+    step_d = np.arange(0.25, td_h, 0.5)
+    step_p = np.array([cx_h, cy_h, cz_h])[None, :] + desurvey(at, azs, dips, step_d)
+    step_eval = eval_emas_field(step_p[:, 0], step_p[:, 1], step_p[:, 2], rng_dh)
+    near_min = (step_eval["env"] > 0.08) & (step_eval["dout"] <= 36.0)
+    near_d = step_d[near_min]
+    lo_d = near_d.min() - 4.0 if near_d.size else -1.0
+    hi_d = near_d.max() + 4.0 if near_d.size else -1.0
+
+    ivs, cur = [], 0.0
+    while cur < td_h - 0.05:
+        ln = 1.0 if (near_d.size and lo_d <= cur <= hi_d) else 2.0
+        nxt = min(cur + ln, td_h)
+        if nxt - cur < 0.3 and ivs:
+            ivs[-1] = (ivs[-1][0], nxt)
+        else:
+            ivs.append((cur, nxt))
+        cur = nxt
+
+    mids = np.array([0.5 * (f_i + t_i) for f_i, t_i in ivs], dtype=float)
+    mid_p = np.array([cx_h, cy_h, cz_h])[None, :] + desurvey(at, azs, dips, mids)
+    mid_eval = eval_emas_field(mid_p[:, 0], mid_p[:, 1], mid_p[:, 2], rng_dh)
+    for j, (f_i, t_i) in enumerate(ivs):
+        rows_asy.append((
+            bhid, f_i, t_i,
+            float(mid_eval["au"][j]), float(mid_eval["ag"][j]), float(mid_eval["sg"][j]),
+        ))
+
+    # Lithology & alteration contiguous intervals 0..TD
+    edges_lit = np.arange(0.0, td_h, 0.5)
+    edges_lit = np.append(edges_lit, td_h)
+    mids_lit = 0.5 * (edges_lit[:-1] + edges_lit[1:])
+    lit_p = np.array([cx_h, cy_h, cz_h])[None, :] + desurvey(at, azs, dips, mids_lit)
+    lit_eval = eval_emas_field(lit_p[:, 0], lit_p[:, 1], lit_p[:, 2], rng_dh)
+    doms_l = lit_eval["domain"]
+    alts_l = lit_eval["alt"]
+    b_idx = 0
+    for j in range(1, mids_lit.size + 1):
+        end = j == mids_lit.size
+        if end or doms_l[j] != doms_l[b_idx] or alts_l[j] != alts_l[b_idx]:
+            rows_lit.append((
+                bhid, float(edges_lit[b_idx]), float(edges_lit[j]),
+                str(doms_l[b_idx]), str(alts_l[b_idx]),
+            ))
+            b_idx = j
+
+col_df = pd.DataFrame(rows_col, columns=["BHID", "XCOLLAR", "YCOLLAR", "ZCOLLAR", "TD"])
+sur_df = pd.DataFrame(rows_sur, columns=["BHID", "AT", "AZ", "DIP"])
+asy_df = pd.DataFrame(rows_asy, columns=["BHID", "FROM", "TO", "AU_GPT", "AG_GPT", "SG"])
+lit_df = pd.DataFrame(rows_lit, columns=["BHID", "FROM", "TO", "LITH", "ALT"])
+
+for c, nd in dict(XCOLLAR=2, YCOLLAR=2, ZCOLLAR=2, TD=1).items():
+    col_df[c] = col_df[c].round(nd)
+for c, nd in dict(AT=1, AZ=1, DIP=1).items():
+    sur_df[c] = sur_df[c].round(nd)
+for c, nd in dict(FROM=2, TO=2, AU_GPT=3, AG_GPT=2, SG=2).items():
+    asy_df[c] = asy_df[c].round(nd)
+for c in ("FROM", "TO"):
+    lit_df[c] = lit_df[c].round(2)
+
+col_df.to_csv(os.path.join(OUT, "collar.csv"), index=False)
+sur_df.to_csv(os.path.join(OUT, "survey.csv"), index=False)
+asy_df.to_csv(os.path.join(OUT, "assay.csv"), index=False)
+lit_df.to_csv(os.path.join(OUT, "litho.csv"), index=False)
+
+dh_ore = asy_df[asy_df["AU_GPT"] >= 0.5]
+print(f"Drillholes    : {len(col_df)} holes, {col_df['TD'].sum():.1f} m, survey={len(sur_df)}, assay={len(asy_df)}, litho={len(lit_df)}")
+print(f"DH Au>=0.5 g/t: n={len(dh_ore)}, mean={dh_ore['AU_GPT'].mean():.2f}, med={dh_ore['AU_GPT'].median():.2f}, max={dh_ore['AU_GPT'].max():.2f}")

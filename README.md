@@ -13,7 +13,7 @@ and commercial software. Just credit Orebit.id.
 ---
 
 [Download all CSVs (source ZIP)](https://github.com/ghoziankarami/orebit-datasets/archive/refs/heads/main.zip) ·
-[Use with GeoSuite](docs/USE_WITH_GEOSUITE.md) · [Orebit guides](https://orebit.id/docs.html)
+[Use with GeoSuite](docs/USE_WITH_GEOSUITE.md) · [Use with Orebit Apps (Open-Pit)](docs/USE_WITH_OREBIT_APPS.md) · [Orebit guides](https://orebit.id/docs.html)
 
 Reading or importing the CSVs needs no Python installation. Python and the
 pinned dependencies are only needed for generators and validation.
@@ -35,8 +35,23 @@ pinned dependencies are only needed for generators and validation.
 
 The grade distributions differ between the vein, laterite profile, and basal
 placer layer, allowing the same workflow to be tested on contrasting inputs.
-The two open-pit datasets use a separate block-model layout with a triangulated
-topographic surface; they are documented in their own folders below.
+
+## The two cross-app open-pit bundles
+
+Each open-pit folder pairs spatially coherent plain-header drillholes
+(`collar`, `survey`, `assay`, `litho`) with a triangulated topographic surface
+(`surface_topo.dxf` / `.csv`) and a 3D `block_model.csv` for end-to-end
+workflows across **GeoSuite**, **Orebit Desktop**, and **PitOpt** (see
+[Use with Orebit Apps](docs/USE_WITH_OREBIT_APPS.md)):
+
+| | `04-emas-open-pit` | `05-nikel-laterit-open-pit` |
+|---|---|---|
+| Deposit | Gunung Kencana (Au–Ag stockwork) | Lamonto (Ni–Co laterite) |
+| CRS / datum | `EPSG:32748` (UTM 48S), MSL | `EPSG:32751` (UTM 51S), MSL |
+| Drillholes | 104 angled holes, 19,160.8 m | 155 vertical holes, 4,313.0 m |
+| Assay rows | 12,669 (1 m ore / 2 m waste) | 4,313 (1 m) |
+| Block model | 116,056 blocks (`15 × 15 × 10 m`) | 28,855 blocks (`25 × 25 × 2 m`) |
+| Topography | `surface_topo.dxf` (6,728 faces) + `.csv` | `surface_topo.dxf` (4,200 faces) + `.csv` |
 
 ---
 
@@ -67,8 +82,8 @@ orebit-datasets/
 ├── 01-emas-epitermal/     collar · survey · assay · litho · README
 ├── 02-nikel-laterit/      collar · survey · assay · litho · README
 ├── 03-timah-placer/       collar · survey · assay · litho · README
-├── 04-emas-open-pit/      block_model · surface_topo (CSV + DXF) · README
-├── 05-nikel-laterit-open-pit/ block_model · surface_topo (CSV + DXF) · README
+├── 04-emas-open-pit/      collar · survey · assay · litho · block_model · surface_topo · README
+├── 05-nikel-laterit-open-pit/ collar · survey · assay · litho · block_model · surface_topo · README
 ├── figures/               deposit-styles.png · grade-distributions.png
 ├── _generator/            the models that produced everything
 │   ├── common.py            noise fields + minimum-curvature desurvey
