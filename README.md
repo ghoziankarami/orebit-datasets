@@ -54,6 +54,25 @@ workflows across **GeoSuite**, **Orebit Desktop**, and **PitOpt** (see
 | Block model | 116,056 blocks (`15 × 15 × 10 m`) | 28,855 blocks (`25 × 25 × 2 m`) |
 | Topography | `surface_topo.dxf` (6,728 faces) + `.csv` | `surface_topo.dxf` (4,200 faces) + `.csv` |
 
+## Preview
+
+Each preview shows the plan view, a vertical section and, for the open-pit sets,
+a block-model bench. Colour is the main grade (log scale for gold and tin).
+
+![01 epithermal gold](figures/preview-01-emas-epitermal.png)
+![02 nickel laterite](figures/preview-02-nikel-laterit.png)
+![03 alluvial tin](figures/preview-03-timah-placer.png)
+![04 open-pit gold](figures/preview-04-emas-open-pit.png)
+![05 open-pit nickel laterite](figures/preview-05-nikel-laterit-open-pit.png)
+
+- **Interactive 3D** (drillholes, assay samples, topography, blocks above cut-off):
+  download and open in a browser, from `docs/3d/<dataset>.html`.
+- **Vignette notebook**: [`docs/VIGNETTE.ipynb`](docs/VIGNETTE.ipynb) shows each file's
+  first rows, how hole paths are computed, and all five previews.
+  [Open in Colab](https://colab.research.google.com/github/ghoziankarami/orebit-datasets/blob/main/docs/VIGNETTE.ipynb).
+- Regenerate: `python -m pip install -r _generator/requirements-preview.txt`, then
+  `python _generator/make_preview.py`.
+
 ---
 
 ## Files
@@ -87,7 +106,8 @@ orebit-datasets/
 ├── 03-timah-placer/       collar · survey · assay · litho · README
 ├── 04-emas-open-pit/      collar · survey · assay · litho · block_model · surface_topo · README
 ├── 05-nikel-laterit-open-pit/ collar · survey · assay · litho · block_model · surface_topo · README
-├── figures/               deposit-styles.png · grade-distributions.png
+├── figures/               deposit-styles.png · grade-distributions.png · preview-*.png
+├── docs/                  guides · VIGNETTE.ipynb · 3d/ (interactive pages)
 ├── _generator/            the models that produced everything
 │   ├── common.py            noise fields + minimum-curvature desurvey
 │   ├── gen_emas.py          gold
@@ -96,7 +116,8 @@ orebit-datasets/
 │   ├── validate.py          integrity + plausibility checks
 │   ├── check_readme.py      checks reference counts and selected statistics
 │   ├── validate_openpit.py  checks open-pit block models and surface files
-│   └── make_figures.py      the figures above
+│   ├── make_figures.py      the figures above
+│   └── make_preview.py      preview PNGs and 3D HTML pages
 ├── CITATION.cff
 ├── LICENSE.txt            CC BY 4.0
 └── README.md
