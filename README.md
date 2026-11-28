@@ -71,8 +71,10 @@ workflows across **GeoSuite**, **Orebit Desktop**, and **PitOpt** (see
 
 ## Files
 
-Every dataset uses the same four-file layout, so a script written for one runs
-on the others:
+Every dataset uses the same four-file drillhole layout, so a script written for
+one runs on the others. The two open-pit folders (`04`, `05`) add
+`block_model.csv`, `surface_topo.csv` and `surface_topo.dxf`; their columns are
+documented in each folder's README:
 
 ```
 collar.csv   BHID, XCOLLAR, YCOLLAR, ZCOLLAR, TD
@@ -215,9 +217,12 @@ spatially correlated geology, and a minimum-curvature desurvey routine.
 
 ## Bahasa Indonesia — ringkasan
 
-Tiga dataset bor **sintetis sepenuhnya** dengan lisensi terbuka, dibangun
-mengikuti gaya endapan yang relevan di Indonesia: **emas epitermal**,
-**nikel laterit**, dan **timah aluvial**.
+Lima dataset **sintetis sepenuhnya** dengan lisensi terbuka, dibangun
+mengikuti gaya endapan yang relevan di Indonesia: tiga dataset bor (**emas
+epitermal**, **nikel laterit**, **timah aluvial**) dan dua paket tambang
+terbuka (**emas open-pit** dan **nikel laterit open-pit**) yang masing-masing
+dilengkapi topografi permukaan (`surface_topo.dxf` / `.csv`) dan block model
+(`block_model.csv`) untuk alur kerja GeoSuite, Orebit Desktop, dan PitOpt.
 
 Semua nilai dihasilkan oleh model dalam `_generator/`, bukan pengukuran
 lapangan atau data perusahaan.
@@ -230,7 +235,7 @@ total. Emas memiliki variasi kadar tinggi (CV 1,66), nikel laterit halus dan ber
 (CV 0,28), timah terkonsentrasi tipis di dasar paleochannel (CV 1,42). Satu
 alur kerja harus sanggup menangani ketiganya.
 
-Format keempat filenya seragam (`collar`, `survey`, `assay`, `litho`) dengan
+Format keempat file bor seragam di semua dataset (`collar`, `survey`, `assay`, `litho`) dengan
 konvensi DIP positif ke bawah, satuan meter, dan satuan kadar tertulis di nama
 kolom. Rincian lengkap tiap dataset ada di README masing-masing folder.
 

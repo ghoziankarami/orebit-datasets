@@ -9,10 +9,11 @@ authors:
     affiliation: Orebit.id
 repository-code: 'https://github.com/ghoziankarami/orebit-datasets'
 abstract: >-
-  Three fully synthetic drillhole datasets covering the deposit
-  styles most relevant to Indonesian mineral exploration:
-  low-sulphidation epithermal gold, nickel laterite, and alluvial
-  tin placer. Generated from geological models rather than
+  Five fully synthetic datasets covering the deposit styles most
+  relevant to Indonesian mineral exploration: low-sulphidation
+  epithermal gold, nickel laterite, and alluvial tin placer
+  drillholes, plus open-pit gold and nickel laterite bundles with
+  surface topography and block models. Generated from geological models rather than
   collected from any real deposit, so they carry no third-party
   rights and can be redistributed, taught from, and bundled into
   software without a licence review. Each dataset uses an
@@ -28,6 +29,8 @@ keywords:
   - epithermal gold
   - nickel laterite
   - alluvial tin
+  - open-pit
+  - block model
   - Indonesia
   - open data
 license: CC-BY-4.0
