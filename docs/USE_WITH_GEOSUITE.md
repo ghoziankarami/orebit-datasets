@@ -9,7 +9,7 @@
    Untuk hanya membaca CSV atau mengimpor ke GeoSuite, Python tidak diperlukan.
 2. Pilih **satu** folder pada tabel berikut. Pakai `collar.csv`, `survey.csv`,
    `assay.csv`, dan `litho.csv` dari folder yang sama.
-3. Buka [GeoSuite Core](https://geosuite.orebit.id/try/Core.html), lalu tab impor
+3. Buka [GeoSuite Core](https://geosuite.orebit.id/Core.html), lalu tab impor
    **Import**. Pilih file sesuai jenisnya. Impor ini mengganti contoh bawaan;
    jangan campurkan file latihan dengan contoh Thalanga atau proyek lain.
 4. Periksa jumlah lubang dan baris assay. Cocokkan kolom koordinat, kedalaman,
@@ -18,7 +18,7 @@
 | Folder | Lubang/collar | Baris assay | Kadar utama | CRS sintetis |
 | --- | ---: | ---: | --- | --- |
 | `01-emas-epitermal` | 103 | 11.526 | `AU_GPT`: g/t; `AG_GPT`: g/t | EPSG:32748 |
-| `02-nikel-laterit` | 350 | 8.278 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
+| `02-nikel-laterit` | 350 | 8.896 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
 | `03-timah-placer` | 500 | 5.990 | `SN_KGM3`: kg/m³ | EPSG:32748 |
 | `04-emas-open-pit` | 104 | 12.669 | `AU_GPT`: g/t; `AG_GPT`: g/t | EPSG:32748 |
 | `05-nikel-laterit-open-pit` | 155 | 4.313 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
@@ -38,8 +38,10 @@ endapan. Kredit: **Orebit Synthetic Drillhole Datasets, CC BY 4.0**.
 - Sel kosong berarti **nilai hilang**, bukan nol. Pastikan interval punya
   `TO > FROM` dan kedalaman tidak melewati `TD`.
 - `NI_PCT=1` berarti **1%**, bukan fraksi 1 atau 100%. `SN_KGM3` adalah kadar
-  volumetrik; jangan diperlakukan sebagai persen atau g/t. `SG`/`BD_TM3`
-  menyimpan densitas t/m³. Pertahankan satuan pada ekspor berikutnya.
+  volumetrik; jangan diperlakukan sebagai persen atau g/t. `SG` adalah specific
+  gravity tanpa dimensi; kesesuaiannya sebagai dry bulk density tidak otomatis
+  terbukti. Kolom bulk density seperti `BD_TM3` memerlukan satuan t/m³ dan
+  definisi pengukuran/asumsi yang jelas. Pertahankan satuan pada ekspor berikutnya.
 
 Jika jumlah tidak cocok, periksa folder dan kolom pemetaan, lalu impor ulang.
 Jika validasi menemukan kesalahan, baca baris yang ditunjuk dan perbaiki dulu.
@@ -90,3 +92,9 @@ CRS and units. This proves the files match that manifest; it does not validate
 geology or authenticate a download without a trusted source/checksum. CI keeps
 a snapshot artifact for each successful check. Published releases, when
 available, are separate from CI artifacts; the source ZIP remains usable.
+
+## Nickel revision1.1.0
+
+The synthetic collar programme now follows an irregular strike-oriented prospect, with selective infill. This is a sampling footprint, not a geological resource shell. Current counts and sampled statistics are in `02-nikel-laterit/STATISTICS.json`. The built-in app sample changes only when a matching GeoSuite build is published. Keep blank grades as missing, retain measured SG through the handoffs, and estimate LIM/SAP separately when that is your justified geological interpretation. [Core exercises](../exercises/README.md) deliberately omit surveys/collars/geology, mismatch identifiers or introduce an overlapping assay; fix and revalidate before exporting.
+
+Current GeoSuite Core builds use the documented missing-collar-and-geology case by default (349 collars). Validation → Download source CSVs → ordinary Import restores the complete 350-hole synthetic sources. Assay/Resource default examples are prepared from the complete main CSVs. Older published builds may differ; check the build and sample counts.

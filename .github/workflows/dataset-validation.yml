@@ -26,6 +26,10 @@ jobs:
         run: python _generator/check_readme.py
       - name: Prove invalid datasets fail the CLI
         run: python -m unittest discover -s tests -v
+      - name: Verify workshop chemistry, immutable package and teaching oracles
+        run: |
+          python _generator/test_workshop_nickel_v4.py
+          python _generator/test_workshop_nickel_v5.py
       - name: Package validated CSVs with provenance and checksums
         run: python _generator/package_snapshot.py --source-ref "$GITHUB_SHA"
       - name: Keep complete teaching-data snapshot

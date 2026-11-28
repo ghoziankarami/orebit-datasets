@@ -1,0 +1,62 @@
+"""Deliberate validation failures; never replace the main training CSVs."""
+
+import csv, shutil
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+source = ROOT / "02-nikel-laterit"
+for name in ("missing-survey", "overlapping-assay", "missing-collar-and-geology"):
+    dest = ROOT / "exercises" / name
+    dest.mkdir(parents=True, exist_ok=True)
+    for table in ("collar", "survey", "assay", "litho"):
+        shutil.copyfile(source / f"{table}.csv", dest / f"{table}.csv")
+    if name == "missing-collar-and-geology":
+        for table in ("collar", "litho"):
+            path = dest / f"{table}.csv"
+            with path.open(newline="") as f:
+                reader = csv.DictReader(f)
+                header, rows = reader.fieldnames, list(reader)
+            if table == "collar":
+                holes = [r["BHID"] for r in rows[:3]]
+                rows = [r for r in rows if r["BHID"] != holes[0]]
+            else:
+                rows = [r for r in rows if r["BHID"] != holes[1]]
+                next(r for r in rows if r["BHID"] == holes[2])["BHID"] = holes[2] + "-MISMATCH"
+            with path.open("w", newline="") as f:
+                writer = csv.DictWriter(f, header, lineterminator="\n")
+                writer.writeheader()
+                writer.writerows(rows)
+        continue
+    table = "survey" if name == "missing-survey" else "assay"
+    with (dest / f"{table}.csv").open(newline="") as f:
+        reader = csv.DictReader(f)
+        header = reader.fieldnames
+        rows = list(reader)
+    hole = rows[0]["BHID"]
+    if table == "survey":
+        rows = [r for r in rows if r["BHID"] != hole]
+    else:
+        duplicate = dict(rows[0])
+        duplicate["FROM"] = str((float(duplicate["FROM"]) + float(duplicate["TO"])) / 2)
+        rows.insert(1, duplicate)
+    with (dest / f"{table}.csv").open("w", newline="") as f:
+        writer = csv.DictWriter(f, header, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+(ROOT / "exercises/README.md").write_text("""# Core validation exercises
+
+All three exercises use the same standard columns as the main nickel dataset. They are deliberately altered copies. GeoSuite builds use the missing-collar-and-geology case as the default Core sample; the main nickel CSVs remain the corrected source. Assay/Resource samples are prepared from the unchanged main CSVs.
+
+- **missing-survey:** upload all four CSVs. One collar/assay hole has no survey records. Inspect linkage and geometry readiness; do not assume a vertical hole to hide the omission.
+- **missing-collar-and-geology:** one collar is missing while its assays and survey remain; a second hole has no geology log; one geology identifier is inconsistent. Inspect orphan records and missing geology separately. Restore the original collar/logs; do not invent coordinates or silently merge identifiers.
+- **overlapping-assay:** upload all four CSVs. One interval overlaps another interval in the first hole. Inspect interval validation; counting both would double-count sampled support.
+
+Expected workflow: import → inspect validation → identify the affected hole/interval → explain the correction → replace the faulty table with its original from `02-nikel-laterit/` → revalidate before merging/exporting.
+
+Use the main nickel table as the corrected answer. An aborted hole or a missing grade in the main dataset is a different case: the data can be valid but incomplete. Preserve blanks, document limitations, and do not invent grades or geometry.
+
+Reproduce with `python _generator/make_core_exercises.py`. Exercises are synthetic, CC BY4.0, credit Orebit.id.
+""")
+print(
+    "Prepared three validation exercises; primary CSVs unchanged."
+)

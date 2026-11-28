@@ -18,6 +18,20 @@ and commercial software. Just credit Orebit.id.
 Reading or importing the CSVs needs no Python installation. Python and the
 pinned dependencies are only needed for generators and validation.
 
+## ATI workshop scenarios
+
+[Workshop v5 ZIP](workshops/2026-11-05/GeoSuite_Workshop_Nickel_v5.zip) ·
+[Scenario guide](workshops/2026-11-05/v5/README.txt) ·
+[SHA-256](workshops/2026-11-05/GeoSuite_Workshop_Nickel_v5.zip.sha256)
+
+The workshop is separate from the three baseline datasets below. Its full
+nickel example has340collars and8,751assays, with unchanged v4 chemistry.
+Choose a new project for each exercise: source validation/repair, curved survey,
+analytical Surface/Loft geometry or the full nickel workflow. QA/QC controls
+are separate from resource samples. Source repair answers and numerical
+references live under `output/` and are never extra estimation inputs.
+V5 adds teaching scenarios; it does not certify an application or resource model.
+
 ## The three datasets
 
 | | `01-emas-epitermal` | `02-nikel-laterit` | `03-timah-placer` |
@@ -26,11 +40,11 @@ pinned dependencies are only needed for generators and validation.
 | Style | Low-sulphidation epithermal vein | Ni laterite over ultramafic | Alluvial placer (cassiterite) |
 | Indonesian analogue | Pongkor / Cikotok, West Java | Sorowako / Halmahera | Bangka–Belitung |
 | Geometry | Steep tabular vein, dip 75° | Sub-horizontal layered profile | Buried palaeochannel |
-| Drilling | 103 angled holes, 20,187 m | 350 vertical holes, 8,195 m | 500 vertical holes, 5,867 m |
-| Pattern | 30 m sections, 4 holes deep | 100 m grid + 50 m infill | 100 m lines × 25 m holes |
+| Drilling | 103 angled holes, 20,187 m | 350 vertical holes, 8,811.5 m | 500 vertical holes, 5,867 m |
+| Pattern | 30 m sections, 4 holes deep | Curved prospect, 100 m regional + selective 50 m infill | 100 m lines × 25 m holes |
 | Sample | 1 m in vein / 2 m waste | 1 m | 1 m |
-| Assay rows | 11,526 | 8,278 | 5,990 |
-| Grade CV | **1.66** (in vein) | **0.28** (in saprolite) | **1.42** (in kaksa) |
+| Assay rows | 11,526 | 8,896 | 5,990 |
+| Grade CV | **1.66** (in vein) | **0.29** (in saprolite) | **1.42** (in kaksa) |
 | Grade unit | g/t | % | kg/m³ |
 
 The grade distributions differ between the vein, laterite profile, and basal
@@ -235,7 +249,7 @@ pendidikan, pengujian software, dan demonstrasi saja.
 ## Citing this
 
 ```
-Karami, G. I. (2026). Orebit Synthetic Drillhole Datasets (Version 1.0.0)
+Karami, G. I. (2026). Orebit Synthetic Drillhole Datasets (Version 1.2.0)
 [Data set]. Orebit.id. CC BY 4.0.
 ```
 
@@ -258,4 +272,17 @@ python _generator/validate_openpit.py
 python -m unittest discover -s tests -v
 ```
 
+The validator checks required column names against the snapshot's grade-unit
+schema, unique collar IDs and survey stations, orphan references, finite
+geometry, assay/lithology interval overlap and collar-depth bounds, and
+nonnegative finite populated grade/density cells. Blank grades remain missing
+values. Negative fixtures exercise these boundaries on copied CSVs, without
+editing the committed training data. A correctly named column alone cannot
+prove that measurements actually use the declared unit.
+
+
 Both checker commands return a nonzero exit status when their checks fail. The statistics checker compares CSV values to explicit reference numbers in its script; it does not parse every number in arbitrary README prose. These checks cover data integrity and documented model statistics, not independent geological validation.
+
+## Core validation exercises
+
+[Three deliberate failure cases](exercises/README.md) teach missing surveys, overlapping assays, orphan records and missing geology. The main nickel files remain the corrected sources. Current GeoSuite Core builds start with the missing-collar-and-geology case; users inspect Validation, download originals and reimport before continuing. Assay/Resource retain prepared data from the complete sources.

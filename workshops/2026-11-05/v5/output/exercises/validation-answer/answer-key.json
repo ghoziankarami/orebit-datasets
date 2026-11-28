@@ -1,0 +1,68 @@
+{
+  "synthetic": true,
+  "base": "orebit-datasets c4c65e5 v4",
+  "faults": [
+    {
+      "file": "collar.csv",
+      "csv_row": 3,
+      "column": "XCOLLAR",
+      "faulty": "",
+      "corrected": "392470.27",
+      "action": "edit",
+      "purpose": "Missing X must not become an origin point."
+    },
+    {
+      "file": "collar.csv",
+      "csv_row": 6,
+      "action": "delete",
+      "purpose": "Duplicate collar ID; keep the original source row."
+    },
+    {
+      "file": "survey.csv",
+      "csv_row": 6,
+      "column": "AZ",
+      "faulty": "400",
+      "corrected": "0.0",
+      "action": "edit",
+      "purpose": "Out-of-range azimuth must quarantine the trace."
+    },
+    {
+      "file": "survey.csv",
+      "csv_row": 9,
+      "column": "DIP",
+      "faulty": "110",
+      "corrected": "90.0",
+      "action": "edit",
+      "purpose": "Invalid dip must remain raw and block geometry."
+    },
+    {
+      "file": "assay.csv",
+      "csv_row": 3,
+      "column": "FROM",
+      "faulty": "0.5",
+      "corrected": "1.0",
+      "action": "edit",
+      "purpose": "Overlap must be fixed from the known synthetic source."
+    },
+    {
+      "file": "assay.csv",
+      "csv_row": 78,
+      "column": "BHID",
+      "faulty": "ORPHAN-TRAINING",
+      "corrected": "LMT-0005",
+      "action": "edit",
+      "purpose": "Mistyped ID must be linked to the source record."
+    }
+  ],
+  "expected_clean_rows": {
+    "collar": 4,
+    "survey": 8,
+    "assay": 77,
+    "litho": 16
+  },
+  "rules": [
+    "Exactly six injected source defects; the UI may group them into fewer findings.",
+    "Answer files are the retained synthetic source, never inferred field measurements.",
+    "Revalidate after Apply or corrected CSV reimport; do not skip failed holes to claim a clean repair."
+  ]
+}
