@@ -20,6 +20,10 @@
 | `01-emas-epitermal` | 103 | 11.526 | `AU_GPT`: g/t; `AG_GPT`: g/t | EPSG:32748 |
 | `02-nikel-laterit` | 350 | 8.896 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
 | `03-timah-placer` | 500 | 5.990 | `SN_KGM3`: kg/m³ | EPSG:32748 |
+| `04-emas-open-pit` | 104 | 12.669 | `AU_GPT`: g/t; `AG_GPT`: g/t | EPSG:32748 |
+| `05-nikel-laterit-open-pit` | 155 | 4.313 | `NI_PCT`: persen; `CO_PCT`: persen | EPSG:32751 |
+
+Untuk alur lintas-aplikasi lengkap (`GeoSuite`, `Orebit Desktop`, dan `PitOpt`) memakai paket terpadu `04-emas-open-pit` atau `05-nikel-laterit-open-pit` beserta model blok dan topografi DXF/CSV, lihat [Menggunakan Dataset Open-Pit di Ekosistem Orebit](USE_WITH_OREBIT_APPS.md).
 
 Semua data **sintetis**, bukan hasil eksplorasi di lokasi nyata. CRS menjelaskan
 satuan dan proyeksi koordinat latihan; posisi peta tidak membuktikan lokasi
